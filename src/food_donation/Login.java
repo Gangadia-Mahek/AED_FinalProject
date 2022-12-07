@@ -1,8 +1,17 @@
+                
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package food_donation;
+
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,6 +22,9 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
+    Connection con=null;
+        ResultSet rs=null;
+        PreparedStatement pst=null;
     public Login() {
         initComponents();
         setExtendedState(Login.MAXIMIZED_BOTH);
@@ -50,7 +62,6 @@ public class Login extends javax.swing.JFrame {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/food_donation/donate_food_0.png"))); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Take a bite out of hunger!!!");
 
@@ -81,12 +92,10 @@ public class Login extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(216, 235, 239));
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Username:");
 
         jUsername.setBackground(new java.awt.Color(216, 235, 239));
-        jUsername.setForeground(new java.awt.Color(0, 0, 0));
         jUsername.setText("Enter Username");
         jUsername.setBorder(null);
         jUsername.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -96,7 +105,6 @@ public class Login extends javax.swing.JFrame {
         });
 
         jPassword.setBackground(new java.awt.Color(216, 235, 239));
-        jPassword.setForeground(new java.awt.Color(0, 0, 0));
         jPassword.setText("password");
         jPassword.setBorder(null);
         jPassword.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -106,7 +114,6 @@ public class Login extends javax.swing.JFrame {
         });
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Password:");
 
@@ -117,14 +124,12 @@ public class Login extends javax.swing.JFrame {
         jSeparator3.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("User Type:");
 
         jUserTypecombo.setBackground(new java.awt.Color(204, 204, 204));
         jUserTypecombo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jUserTypecombo.setForeground(new java.awt.Color(0, 0, 0));
-        jUserTypecombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select", "Donar", "DonarAdmin", "Volunteer", "PackagingAdmin", "LogisticsAdmin", "DeliveryEmployee", "Recipient", "RecipientAdmin", "Admin", " " }));
+        jUserTypecombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select", "Donor", "DonorAdmin", "Volunteer", "PackagingAdmin", "LogisticsAdmin", "DeliveryEmployee", "Recipient", "RecipientAdmin", "Admin", "" }));
         jUserTypecombo.setBorder(null);
         jUserTypecombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -133,7 +138,6 @@ public class Login extends javax.swing.JFrame {
         });
 
         jCheckpass.setBackground(new java.awt.Color(216, 235, 239));
-        jCheckpass.setForeground(new java.awt.Color(0, 0, 0));
         jCheckpass.setText("Show Password");
         jCheckpass.setBorder(null);
         jCheckpass.addActionListener(new java.awt.event.ActionListener() {
@@ -142,8 +146,6 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jlogin.setBackground(new java.awt.Color(255, 255, 255));
-        jlogin.setForeground(new java.awt.Color(0, 0, 0));
         jlogin.setText("Login ");
         jlogin.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jlogin.addActionListener(new java.awt.event.ActionListener() {
@@ -152,8 +154,6 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        jreg.setBackground(new java.awt.Color(255, 255, 255));
-        jreg.setForeground(new java.awt.Color(0, 0, 0));
         jreg.setText("Register");
         jreg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -329,7 +329,140 @@ public class Login extends javax.swing.JFrame {
 
     private void jloginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jloginActionPerformed
         // TODO add your handling code here:
+        Connection con=null;
+        ResultSet rs=null;
+        PreparedStatement pst=null;
         
+        String username = jUsername.getText();
+        String password = jPassword.getText();
+        String usertype = jUserTypecombo.getSelectedItem().toString();
+        
+        if (jUserTypecombo.getSelectedItem().equals("Select")) {
+            JOptionPane.showMessageDialog( this, "Please select user type");
+            return;
+
+        }
+        if (jUsername.getText().equals("")) {
+            JOptionPane.showMessageDialog( this, "Please enter user name");
+            return;
+        }
+        if (jPassword.getText().equals("")) {
+            JOptionPane.showMessageDialog( this, "Please enter password");
+            return;
+
+        }
+        if (jUsername.getText().equals("Enter Username")) {
+            JOptionPane.showMessageDialog( this, "Please enter user name");
+            return;
+        
+        }
+        con = Connect.ConnectDB();
+        if (jUserTypecombo.getSelectedItem().equals("Donor")){
+        String sq1= "select * from donor_registration where username= ? and password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            rs= pst.executeQuery();
+            if (rs.next()){
+                this.setVisible(false);
+                // Next frame
+                
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
+        if (jUserTypecombo.getSelectedItem().equals("DonorAdmin")){
+        String sq1= "select * from admin_login where admin_username= ? and admin_password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            
+            rs= pst.executeQuery();
+            if (rs.next()){
+                //Next page
+                this.setVisible(false);
+                DonarRegistration dr = new DonarRegistration();
+                dr.setVisible(true);
+                
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
+        if (jUserTypecombo.getSelectedItem().equals("PackagingAdmin")){
+        String sq1= "select * from admin_login where admin_username= ? and admin_password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            rs= pst.executeQuery();
+            if (rs.next()){
+                //Next frame
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
+        if (jUserTypecombo.getSelectedItem().equals("LogisticsAdmin")){
+        String sq1= "select * from admin_login where admin_username= ? and admin_password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            rs= pst.executeQuery();
+            if (rs.next()){
+                //Next frame
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
+        if (jUserTypecombo.getSelectedItem().equals("RecipientAdmin")){
+        String sq1= "select * from admin_login where admin_username= ? and admin_password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            rs= pst.executeQuery();
+            if (rs.next()){
+                //Next frame
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
+
+
+                                         
+
         
         
         
@@ -337,7 +470,6 @@ public class Login extends javax.swing.JFrame {
 
     private void jregActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jregActionPerformed
         // TODO add your handling code here:
-
         DonarRegistration dr = new DonarRegistration();
         dr.setVisible(true);
        dispose();
