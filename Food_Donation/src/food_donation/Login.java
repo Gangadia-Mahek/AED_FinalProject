@@ -4,6 +4,13 @@
  */
 package food_donation;
 
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author shubh
@@ -13,6 +20,9 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
+    Connection con=null;
+        ResultSet rs=null;
+        PreparedStatement pst=null;
     public Login() {
         initComponents();
         setExtendedState(Login.MAXIMIZED_BOTH);
@@ -33,7 +43,6 @@ public class Login extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jUsername = new javax.swing.JTextField();
-        jPassword = new javax.swing.JPasswordField();
         jLabel3 = new javax.swing.JLabel();
         jSeparator4 = new javax.swing.JSeparator();
         jSeparator3 = new javax.swing.JSeparator();
@@ -42,6 +51,7 @@ public class Login extends javax.swing.JFrame {
         jCheckpass = new javax.swing.JCheckBox();
         jlogin = new javax.swing.JButton();
         jreg = new javax.swing.JButton();
+        jPassword = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -92,16 +102,6 @@ public class Login extends javax.swing.JFrame {
         jUsername.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jUsernameMousePressed(evt);
-            }
-        });
-
-        jPassword.setBackground(new java.awt.Color(216, 235, 239));
-        jPassword.setForeground(new java.awt.Color(0, 0, 0));
-        jPassword.setText("password");
-        jPassword.setBorder(null);
-        jPassword.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jPasswordMousePressed(evt);
             }
         });
 
@@ -161,6 +161,16 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        jPassword.setBackground(new java.awt.Color(216, 235, 239));
+        jPassword.setForeground(new java.awt.Color(0, 0, 0));
+        jPassword.setText("jPasswordField1");
+        jPassword.setBorder(null);
+        jPassword.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPasswordMousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -178,23 +188,21 @@ public class Login extends javax.swing.JFrame {
                                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jUsername)
-                                    .addComponent(jPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(jUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
+                                    .addComponent(jPassword)))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(89, 89, 89)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jUserTypecombo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(155, 155, 155)
+                        .addComponent(jCheckpass))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(154, 154, 154)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jlogin)
-                                .addGap(44, 44, 44)
-                                .addComponent(jreg, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(jCheckpass)))))
+                        .addComponent(jlogin)
+                        .addGap(44, 44, 44)
+                        .addComponent(jreg, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(222, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -202,15 +210,15 @@ public class Login extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(72, 72, 72)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(jLabel2)
+                    .addComponent(jUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 19, Short.MAX_VALUE)
+                    .addComponent(jPassword))
+                .addGap(9, 9, 9)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -249,11 +257,6 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
         jUsername.setText("");
     }//GEN-LAST:event_jUsernameMousePressed
-
-    private void jPasswordMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPasswordMousePressed
-        // TODO add your handling code here:
-        jPassword.setText("");
-    }//GEN-LAST:event_jPasswordMousePressed
 
     private void jUserTypecomboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUserTypecomboActionPerformed
         // TODO add your handling code here:
@@ -329,6 +332,134 @@ public class Login extends javax.swing.JFrame {
 
     private void jloginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jloginActionPerformed
         // TODO add your handling code here:
+         String username = jUsername.getText();
+        String password = jPassword.getText();
+        String usertype = jUserTypecombo.getSelectedItem().toString();
+        
+        if (jUserTypecombo.getSelectedItem().equals("Select")) {
+            JOptionPane.showMessageDialog( this, "Please select user type");
+            return;
+
+        }
+        if (jUsername.getText().equals("")) {
+            JOptionPane.showMessageDialog( this, "Please enter user name");
+            return;
+        }
+        if (jPassword.getText().equals("")) {
+            JOptionPane.showMessageDialog( this, "Please enter password");
+            return;
+
+        }
+        if (jUsername.getText().equals("Enter Username")) {
+            JOptionPane.showMessageDialog( this, "Please enter user name");
+            return;
+        
+        }
+        con = Connect.ConnectDB();
+        if (jUserTypecombo.getSelectedItem().equals("Donor")){
+        String sq1= "select * from donor_registration where username= ? and password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            rs= pst.executeQuery();
+            if (rs.next()){
+                this.setVisible(false);
+                // Next frame
+                
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
+        if (jUserTypecombo.getSelectedItem().equals("DonorAdmin")){
+        String sq1= "select * from admin_login where admin_username= ? and admin_password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            
+            rs= pst.executeQuery();
+            if (rs.next()){
+                //Next page
+                this.setVisible(false);
+                DonorRegistration dr = new DonorRegistration();
+                dr.setVisible(true);
+                
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
+        if (jUserTypecombo.getSelectedItem().equals("PackagingAdmin")){
+        String sq1= "select * from admin_login where admin_username= ? and admin_password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            rs= pst.executeQuery();
+            if (rs.next()){
+                //Next frame
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
+        if (jUserTypecombo.getSelectedItem().equals("LogisticsAdmin")){
+        String sq1= "select * from admin_login where admin_username= ? and admin_password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            rs= pst.executeQuery();
+            if (rs.next()){
+                //Next frame
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
+        if (jUserTypecombo.getSelectedItem().equals("RecipientAdmin")){
+        String sq1= "select * from admin_login where admin_username= ? and admin_password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            rs= pst.executeQuery();
+            if (rs.next()){
+                //Next frame
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
+
+
         
         
         
@@ -337,11 +468,16 @@ public class Login extends javax.swing.JFrame {
 
     private void jregActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jregActionPerformed
         // TODO add your handling code here:
-
-        DonarRegistration dr = new DonarRegistration();
+         DonorRegistration dr = new DonorRegistration();
         dr.setVisible(true);
        dispose();
+        
     }//GEN-LAST:event_jregActionPerformed
+
+    private void jPasswordMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPasswordMousePressed
+        // TODO add your handling code here:
+        jPassword.setText("");
+    }//GEN-LAST:event_jPasswordMousePressed
 
     /**
      * @param args the command line arguments
