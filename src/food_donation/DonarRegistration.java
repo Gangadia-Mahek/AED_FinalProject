@@ -4,6 +4,12 @@
  */
 package food_donation;
 
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
@@ -12,11 +18,16 @@ import javax.swing.JOptionPane;
  * @author shubh
  */
 public class DonarRegistration extends javax.swing.JFrame {
+    Connection con=null;
+    PreparedStatement pst=null;
+    ResultSet rs=null;
 
     /**
      * Creates new form DonarRegistration
      */
     public DonarRegistration() {
+        initComponents();
+        con=RegConnect.ConnectDB();
         initComponents();
         setExtendedState(DonarRegistration.MAXIMIZED_BOTH);
     }
@@ -631,6 +642,101 @@ public class DonarRegistration extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        String gender = "";
+        
+        if(jUname.getText().isBlank()||jPass.getText().isBlank()||jCPass.getText().isBlank() ||jAge.getText().isBlank()|| jName.getText().isBlank()|| gender.equals("")|| 
+                jAddr.getText().isBlank()|| jCity.getText().isBlank()|| jState.getText().isBlank()|| jCountry.getText().isBlank()||jZip.getText().isEmpty()|| jPhone.getText().isBlank()|| jEmail.getText().isBlank())
+        {
+            JOptionPane.showMessageDialog(this,
+                    "Please Enter All Fields",
+                    "Try Again",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        
+        String username = jUname.getText();
+        String pass = jPass.getText();
+        String password = jCPass.getText();
+        String name = jName.getText();
+        int age = Integer.parseInt(jAge.getText());
+        String addr = jAddr.getText();
+        String city = jCity.getText();
+        String state = jState.getText();
+        String country = jCountry.getText();
+        int zipcode = Integer.parseInt(jZip.getText());
+        int phone = Integer.parseInt(jPhone.getText());
+        String email = jEmail.getText();
+        String MPass=null;
+        
+        try{
+            if(pass.equals(password))
+            {
+                MPass = pass;
+            }
+            else{
+            JOptionPane.showMessageDialog(this,"Password are not matching","Error", HEIGHT);
+            }
+        
+            if(jMale.isSelected())
+            {
+                gender = "Male";
+            }
+            if(jFemale.isSelected())
+            {
+                gender = "Female";
+            }
+            if(!Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",jName.getText()))
+            {
+                JOptionPane.showMessageDialog(this,"Please Enter Valid Name  !!!");
+            }
+            else if(!Pattern.matches("^[0-9].*$",jAge.getText()))
+            {
+                JOptionPane.showMessageDialog(this,"Please Enter Valid Age !!!");
+            }
+            else if(!Pattern.matches("^[0-9].*$", jZip.getText()))
+            {
+                JOptionPane.showMessageDialog(this,"Please Enter Valid Number !!!");
+            }
+            else if(!Pattern.matches("^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[a-z]{2,4}$0",jEmail.getText()))
+            {
+                JOptionPane.showMessageDialog(this,"Please Enter Valid Email !!!");
+            }
+            
+                   Statement stmt;
+                   stmt= con.createStatement();
+                   String sql1="Select username from donor_registration where username= '" + jUname.getText() + "'";
+                   rs=stmt.executeQuery(sql1);
+                   if(rs.next()){
+                       JOptionPane.showMessageDialog( this, " Username already exists","Error", JOptionPane.ERROR_MESSAGE);
+                       jUname.setText("");
+                       jUname.requestDefaultFocus();
+                       return;
+                   }
+
+            
+            String sql ="Insert into donor_registration(User_Name,Password,Name,Gender,Age,Aaddress,City,State,Country,ZipCode,Phone_Number,Email) value(?,?,?,?,?,?,?,?,?,?,?,?)";
+            pst =con.prepareStatement (sql);
+            pst.setString(1,username);
+            pst.setString(2,password);
+            pst.setString(3,name);
+            pst.setInt(4,age);
+            pst.setString(5,addr);
+            pst.setString(6,city);
+            pst.setString(7,state);
+            pst.setString(8,country);
+            pst.setInt(9,zipcode);
+            pst.setInt(10,phone);
+            pst.setString(11,email);
+            
+        }catch(HeadlessException | SQLException ex){
+            JOptionPane.showMessageDialog(this,ex);
+        }
+        
+        
+        
+        
+        
+          
+        
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
