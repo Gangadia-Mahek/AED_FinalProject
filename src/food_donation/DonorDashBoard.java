@@ -18,7 +18,7 @@ public class DonorDashBoard extends javax.swing.JFrame {
     public DonorDashBoard() {
         initComponents();
         setExtendedState(DonorDashBoard.MAXIMIZED_BOTH);
-     donatep.setVisible(false);
+     //donatep.setVisible(false);
      Date date =new Date();
      jdate.setMinSelectableDate(date);
      jexdate.setMinSelectableDate(date);
