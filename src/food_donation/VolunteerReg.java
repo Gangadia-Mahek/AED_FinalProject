@@ -4,6 +4,16 @@
  */
 package food_donation;
 
+import java.awt.HeadlessException;
+import static java.awt.image.ImageObserver.HEIGHT;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author shubh
@@ -13,8 +23,12 @@ public class VolunteerReg extends javax.swing.JFrame {
     /**
      * Creates new form VolunteerReg
      */
+    Connection con=null;
+    PreparedStatement pst=null;
+    ResultSet rs=null;
     public VolunteerReg() {
         initComponents();
+        con=Connect.ConnectDB();
         setExtendedState(VolunteerReg.MAXIMIZED_BOTH);
     }
 
@@ -63,8 +77,6 @@ public class VolunteerReg extends javax.swing.JFrame {
         javax.swing.JSeparator jSeparator8 = new javax.swing.JSeparator();
         jButton1 = new javax.swing.JButton();
         javax.swing.JLabel jLabel5 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jUname = new javax.swing.JTextField();
         javax.swing.JLabel jLabel9 = new javax.swing.JLabel();
         javax.swing.JSeparator jSeparator7 = new javax.swing.JSeparator();
         javax.swing.JSeparator jSeparator13 = new javax.swing.JSeparator();
@@ -74,6 +86,8 @@ public class VolunteerReg extends javax.swing.JFrame {
         javax.swing.JLabel jLabel16 = new javax.swing.JLabel();
         javax.swing.JSeparator jSeparator15 = new javax.swing.JSeparator();
         jAge1 = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
+        jUname = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -81,7 +95,6 @@ public class VolunteerReg extends javax.swing.JFrame {
 
         jLabel2.setBackground(new java.awt.Color(186, 79, 84));
         jLabel2.setFont(new java.awt.Font("NexaBlack", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("VOLUNTEER REGISTRATION FORM");
 
@@ -92,7 +105,6 @@ public class VolunteerReg extends javax.swing.JFrame {
         jSeparator11.setForeground(new java.awt.Color(204, 204, 204));
 
         jCountry.setBackground(new java.awt.Color(134, 197, 197));
-        jCountry.setForeground(new java.awt.Color(0, 0, 0));
         jCountry.setText("Enter Country");
         jCountry.setBorder(null);
         jCountry.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -102,12 +114,10 @@ public class VolunteerReg extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Create Password:");
 
         jCity.setBackground(new java.awt.Color(134, 197, 197));
-        jCity.setForeground(new java.awt.Color(0, 0, 0));
         jCity.setText("Enter City");
         jCity.setBorder(null);
         jCity.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -117,7 +127,6 @@ public class VolunteerReg extends javax.swing.JFrame {
         });
 
         jName.setBackground(new java.awt.Color(134, 197, 197));
-        jName.setForeground(new java.awt.Color(0, 0, 0));
         jName.setText("Enter Name");
         jName.setBorder(null);
         jName.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -127,7 +136,6 @@ public class VolunteerReg extends javax.swing.JFrame {
         });
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel11.setText("Gender:");
 
@@ -135,7 +143,6 @@ public class VolunteerReg extends javax.swing.JFrame {
         jSeparator4.setForeground(new java.awt.Color(204, 204, 204));
 
         jEmail.setBackground(new java.awt.Color(134, 197, 197));
-        jEmail.setForeground(new java.awt.Color(0, 0, 0));
         jEmail.setText("Enter Email");
         jEmail.setBorder(null);
         jEmail.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -145,12 +152,10 @@ public class VolunteerReg extends javax.swing.JFrame {
         });
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("State:");
 
         jPass.setBackground(new java.awt.Color(134, 197, 197));
-        jPass.setForeground(new java.awt.Color(0, 0, 0));
         jPass.setText("password");
         jPass.setBorder(null);
         jPass.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -160,12 +165,10 @@ public class VolunteerReg extends javax.swing.JFrame {
         });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("City:");
 
         jZip.setBackground(new java.awt.Color(134, 197, 197));
-        jZip.setForeground(new java.awt.Color(0, 0, 0));
         jZip.setText("Enter Zipcode");
         jZip.setBorder(null);
         jZip.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -175,7 +178,6 @@ public class VolunteerReg extends javax.swing.JFrame {
         });
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Age:");
 
@@ -183,11 +185,9 @@ public class VolunteerReg extends javax.swing.JFrame {
         jSeparator5.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel12.setText("Phone Number:");
 
-        jMale.setForeground(new java.awt.Color(0, 0, 0));
         jMale.setText("Male");
         jMale.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -195,7 +195,6 @@ public class VolunteerReg extends javax.swing.JFrame {
             }
         });
 
-        jFemale.setForeground(new java.awt.Color(0, 0, 0));
         jFemale.setText("Female");
         jFemale.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -204,7 +203,6 @@ public class VolunteerReg extends javax.swing.JFrame {
         });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("User Name:");
 
@@ -218,12 +216,10 @@ public class VolunteerReg extends javax.swing.JFrame {
         jSeparator6.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel13.setText("Email:");
 
         jAddr.setBackground(new java.awt.Color(134, 197, 197));
-        jAddr.setForeground(new java.awt.Color(0, 0, 0));
         jAddr.setText("Enter Address");
         jAddr.setBorder(null);
         jAddr.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -233,12 +229,10 @@ public class VolunteerReg extends javax.swing.JFrame {
         });
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Home Address:");
 
         jPhone.setBackground(new java.awt.Color(134, 197, 197));
-        jPhone.setForeground(new java.awt.Color(0, 0, 0));
         jPhone.setText("Enter Phone Number");
         jPhone.setBorder(null);
         jPhone.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -248,7 +242,6 @@ public class VolunteerReg extends javax.swing.JFrame {
         });
 
         jState.setBackground(new java.awt.Color(134, 197, 197));
-        jState.setForeground(new java.awt.Color(0, 0, 0));
         jState.setText("Enter State");
         jState.setBorder(null);
         jState.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -258,12 +251,10 @@ public class VolunteerReg extends javax.swing.JFrame {
         });
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel10.setText("Zipcode:");
 
         jAge.setBackground(new java.awt.Color(134, 197, 197));
-        jAge.setForeground(new java.awt.Color(0, 0, 0));
         jAge.setText("Enter Age");
         jAge.setBorder(null);
         jAge.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -281,8 +272,6 @@ public class VolunteerReg extends javax.swing.JFrame {
         jSeparator8.setBackground(new java.awt.Color(204, 204, 204));
         jSeparator8.setForeground(new java.awt.Color(204, 204, 204));
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
-        jButton1.setForeground(new java.awt.Color(0, 0, 0));
         jButton1.setText("Submit");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -291,31 +280,10 @@ public class VolunteerReg extends javax.swing.JFrame {
         });
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Name:");
 
-        jButton2.setBackground(new java.awt.Color(255, 255, 255));
-        jButton2.setForeground(new java.awt.Color(0, 0, 0));
-        jButton2.setText("Back ");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
-        jUname.setBackground(new java.awt.Color(134, 197, 197));
-        jUname.setForeground(new java.awt.Color(0, 0, 0));
-        jUname.setText("Enter username");
-        jUname.setBorder(null);
-        jUname.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jUnameMousePressed(evt);
-            }
-        });
-
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("Country:");
 
@@ -326,19 +294,16 @@ public class VolunteerReg extends javax.swing.JFrame {
         jSeparator13.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel15.setForeground(new java.awt.Color(0, 0, 0));
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel15.setText("Select Status:");
 
         jComboBox1.setBackground(new java.awt.Color(204, 204, 204));
-        jComboBox1.setForeground(new java.awt.Color(0, 0, 0));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select", "Working", "Student" }));
 
         jSeparator14.setBackground(new java.awt.Color(204, 204, 204));
         jSeparator14.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel16.setText("Enter Organization:");
 
@@ -346,12 +311,27 @@ public class VolunteerReg extends javax.swing.JFrame {
         jSeparator15.setForeground(new java.awt.Color(204, 204, 204));
 
         jAge1.setBackground(new java.awt.Color(134, 197, 197));
-        jAge1.setForeground(new java.awt.Color(0, 0, 0));
         jAge1.setText("Enter Organization");
         jAge1.setBorder(null);
         jAge1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jAge1MousePressed(evt);
+            }
+        });
+
+        jButton3.setText("Back");
+
+        jUname.setBackground(new java.awt.Color(134, 197, 197));
+        jUname.setText("Enter Username");
+        jUname.setBorder(null);
+        jUname.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jUnameMousePressed(evt);
+            }
+        });
+        jUname.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jUnameActionPerformed(evt);
             }
         });
 
@@ -390,7 +370,7 @@ public class VolunteerReg extends javax.swing.JFrame {
                                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addGap(18, 18, 18)
-                                                    .addComponent(jUname, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                    .addComponent(jUname, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                             .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -406,8 +386,8 @@ public class VolunteerReg extends javax.swing.JFrame {
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                             .addGap(73, 73, 73)
                                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(52, 52, 52)
-                                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGap(88, 88, 88)
+                                            .addComponent(jButton3))
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                             .addComponent(jLabel12)
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -482,7 +462,7 @@ public class VolunteerReg extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jUname, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jUname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -567,8 +547,8 @@ public class VolunteerReg extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(40, Short.MAX_VALUE))
+                    .addComponent(jButton3))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -653,15 +633,99 @@ public class VolunteerReg extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-
-
+        String gender = "";
+         if(jMale.isSelected())
+            {
+                gender = "Male";
+                
+            }
+            if(jFemale.isSelected())
+            {
+                gender = "Female";
+                
+            }
+            if(jUname.getText().isBlank()||jPass.getText().isBlank() ||jAge.getText().isBlank()|| jName.getText().isBlank()|| gender.equals("")|| jAge1.getText().isBlank() ||
+                jAddr.getText().isBlank()|| jCity.getText().isBlank()|| jState.getText().isBlank()|| jCountry.getText().isBlank()||jZip.getText().isEmpty()|| jPhone.getText().isBlank()|| jEmail.getText().isBlank())
+        {
+            JOptionPane.showMessageDialog(this,
+                    "Please Enter All Fields",
+                    "Try Again",
+                    JOptionPane.ERROR_MESSAGE);
+        }if (jComboBox1.getSelectedItem().equals("Select")) {
+                JOptionPane.showMessageDialog( this, "Please select blood group","Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        else{
+                if(!Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",jName.getText()))
+                {
+                    JOptionPane.showMessageDialog(this,"Please Enter Valid Name  !!!");
+                }
+                else if(!Pattern.matches("^[0-9].*$",jAge.getText()))
+                {
+                    JOptionPane.showMessageDialog(this,"Please Enter Valid Age !!!");
+                }
+                else if(!Pattern.matches("^[0-9].*$", jZip.getText()))
+                {
+                    JOptionPane.showMessageDialog(this,"Please Enter Valid Number !!!");
+                }
+                else if(!Pattern.matches("^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[a-z]{2,4}$",jEmail.getText()))
+                {
+                    JOptionPane.showMessageDialog(this,"Please Enter Valid Email !!!");
+                }
+                else {
+                    String username = jUname.getText();
+                    String pass = jPass.getText();
+                    String name = jName.getText();
+                    int age = Integer.parseInt(jAge.getText());
+                    String status = jComboBox1.getSelectedItem().toString();
+                    String organization = jAge1.getText();
+                    String addr = jAddr.getText();
+                    String city = jCity.getText();
+                    String state = jState.getText();
+                    String country = jCountry.getText();
+                    int zipcode = Integer.parseInt(jZip.getText());
+                    int phone = Integer.parseInt(jPhone.getText());
+                    String email = jEmail.getText();
+                    try{
+                        Statement stmt;
+                        stmt= con.createStatement();
+                        String sql1="Select User_Name from volunteer_registration where User_Name= '" + jUname.getText() + "'";
+                        rs=stmt.executeQuery(sql1);
+                        if(rs.next()){
+                            JOptionPane.showMessageDialog( this, " Username already exists","Error", JOptionPane.ERROR_MESSAGE);
+                            jUname.setText("");
+                            jUname.requestDefaultFocus();
+                            return;
+                        }
+                        String sql ="Insert into volunteer_registration(User_Name,Password,Name,Gender,Age,Status,Organization,Address,City,State,Country,ZipCode,Phone_Number,Email) value(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                        pst =con.prepareStatement (sql);
+                        pst.setString(1,username);
+                        pst.setString(2,pass);
+                        pst.setString(3,name);
+                        pst.setString(4,gender);
+                        pst.setInt(5,age);
+                        pst.setString(6,status);
+                        pst.setString(7,organization);
+                        pst.setString(8,addr);
+                        pst.setString(9,city);
+                        pst.setString(10,state);
+                        pst.setString(11,country);
+                        pst.setInt(12,zipcode);
+                        pst.setInt(13,phone);
+                        pst.setString(14,email);
+                        pst.execute();
+                        JOptionPane.showMessageDialog(this,"Successfully Registered","Volunteer",JOptionPane.INFORMATION_MESSAGE);
+                    }catch(HeadlessException | SQLException ex){
+                        JOptionPane.showMessageDialog(this,ex);
+                    }
+                }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jUnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jUnameActionPerformed
         // TODO add your handling code here:
-
-        
-    }//GEN-LAST:event_jButton2ActionPerformed
+        jUname.setText("");
+    }//GEN-LAST:event_jUnameActionPerformed
 
     private void jUnameMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jUnameMousePressed
         // TODO add your handling code here:
@@ -670,6 +734,7 @@ public class VolunteerReg extends javax.swing.JFrame {
 
     private void jAge1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jAge1MousePressed
         // TODO add your handling code here:
+        jAge1.setText("");
     }//GEN-LAST:event_jAge1MousePressed
 
     /**
@@ -702,6 +767,7 @@ public class VolunteerReg extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new VolunteerReg().setVisible(true);
             }
@@ -713,7 +779,7 @@ public class VolunteerReg extends javax.swing.JFrame {
     private javax.swing.JTextField jAge;
     private javax.swing.JTextField jAge1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JTextField jCity;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JTextField jCountry;
