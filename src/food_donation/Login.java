@@ -402,6 +402,9 @@ public class Login extends javax.swing.JFrame {
             rs= pst.executeQuery();
             if (rs.next()){
                 //Next frame
+                this.setVisible(false);
+                Packandstoreadmin psa = new Packandstoreadmin(username);
+                psa.setVisible(true);
             }
             
             else{
@@ -412,6 +415,30 @@ public class Login extends javax.swing.JFrame {
             // TODO add your handling code here:
         }
         }
+        if (jUserTypecombo.getSelectedItem().equals("Volunteer")){
+        String sq1= "select * from volunteer_registration where User_Name= ? and Password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            rs= pst.executeQuery();
+            if (rs.next()){
+                //Next frame
+                this.setVisible(false);
+                VolunteerDashboard vd = new VolunteerDashboard(username);
+                vd.setVisible(true);
+                
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        
+        }
         if (jUserTypecombo.getSelectedItem().equals("LogisticsAdmin")){
         String sq1= "select * from admin_login where admin_username= ? and admin_password =?";
         try{
@@ -421,6 +448,9 @@ public class Login extends javax.swing.JFrame {
             rs= pst.executeQuery();
             if (rs.next()){
                 //Next frame
+                this.setVisible(false);
+                LogisticAdmin la = new LogisticAdmin();
+                la.setVisible(true);
             }
             
             else{

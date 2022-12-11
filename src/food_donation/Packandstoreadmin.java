@@ -4,18 +4,52 @@
  */
 package food_donation;
 
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 /**
  *
  * @author shubh
  */
 public class Packandstoreadmin extends javax.swing.JFrame {
 
+    Connection con = null;
+    ResultSet rs = null;
+    PreparedStatement pst = null;
+
     /**
      * Creates new form Packandstoreadmin
      */
     public Packandstoreadmin() {
         initComponents();
-          setExtendedState(Packandstoreadmin.MAXIMIZED_BOTH);
+        con = Connect.ConnectDB();
+        packageRequestsTable();
+        volunteerTable();
+        setExtendedState(Packandstoreadmin.MAXIMIZED_BOTH);
+    }
+    String packadmin;
+
+    public Packandstoreadmin(String username) {
+        initComponents();
+        con = Connect.ConnectDB();
+        packageRequestsTable();
+        volunteerTable();
+        setExtendedState(Packandstoreadmin.MAXIMIZED_BOTH);
+        this.packadmin = username;
+        jPackagingAdmin.setText(packadmin);
+
     }
 
     /**
@@ -28,7 +62,6 @@ public class Packandstoreadmin extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -39,6 +72,8 @@ public class Packandstoreadmin extends javax.swing.JFrame {
         jTextPane1 = new javax.swing.JTextPane();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jRecipientID = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
         Voldir = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         jTable4 = new javax.swing.JTable();
@@ -75,21 +110,15 @@ public class Packandstoreadmin extends javax.swing.JFrame {
         Delete = new javax.swing.JButton();
         jSearch = new javax.swing.JTextField();
         Search = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
+        jPackagingAdmin = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(134, 197, 197));
         jPanel1.setPreferredSize(new java.awt.Dimension(457, 494));
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/food_donation/Packing.png"))); // NOI18N
-
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Food for Everyone !!!");
 
@@ -97,21 +126,15 @@ public class Packandstoreadmin extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(31, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(82, Short.MAX_VALUE)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(55, 55, 55))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(119, 119, 119)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(652, 652, 652)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -119,41 +142,58 @@ public class Packandstoreadmin extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(216, 235, 239));
 
         jTabbedPane1.setBackground(new java.awt.Color(216, 235, 239));
-        jTabbedPane1.setForeground(new java.awt.Color(0, 0, 0));
         jTabbedPane1.setToolTipText("");
         jTabbedPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         RecRequest.setBackground(new java.awt.Color(216, 235, 239));
-        RecRequest.setForeground(new java.awt.Color(0, 0, 0));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Request ID", "Recipient Name", "Address", "Organization", "Food Name", "Weight", "Date"
+                "Request ID", "Recipient ID", "Recipient Name", "Address", "Recipient Organization", "Food Name", "Weight", "Date", "Status", "Comments"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jScrollPane2.setViewportView(jTextPane1);
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
-        jButton1.setForeground(new java.awt.Color(0, 0, 0));
         jButton1.setText("Approve");
         jButton1.setToolTipText("");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
-        jButton2.setBackground(new java.awt.Color(255, 255, 255));
-        jButton2.setForeground(new java.awt.Color(0, 0, 0));
         jButton2.setText("Decline");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("LogOut");
+        jButton3.setToolTipText("");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout RecRequestLayout = new javax.swing.GroupLayout(RecRequest);
         RecRequest.setLayout(RecRequestLayout);
@@ -162,13 +202,15 @@ public class Packandstoreadmin extends javax.swing.JFrame {
             .addGroup(RecRequestLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(RecRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 639, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(RecRequestLayout.createSequentialGroup()
                         .addComponent(jButton1)
                         .addGap(52, 52, 52)
                         .addComponent(jButton2))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(500, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1034, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jRecipientID, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3))
+                .addContainerGap(105, Short.MAX_VALUE))
         );
         RecRequestLayout.setVerticalGroup(
             RecRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -177,11 +219,15 @@ public class Packandstoreadmin extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(47, 47, 47)
+                .addGap(18, 18, 18)
+                .addComponent(jRecipientID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
                 .addGroup(RecRequestLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addContainerGap(372, Short.MAX_VALUE))
+                .addGap(41, 41, 41)
+                .addComponent(jButton3)
+                .addContainerGap(308, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Recipient Requests", RecRequest);
@@ -204,94 +250,97 @@ public class Packandstoreadmin extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable4MouseClicked(evt);
+            }
+        });
         jScrollPane5.setViewportView(jTable4);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Home Address:");
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel15.setForeground(new java.awt.Color(0, 0, 0));
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel15.setText("Select Status:");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel13.setText("Email:");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Create Password:");
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel10.setText("Zipcode:");
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("Country:");
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("City:");
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("Name:");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel12.setText("Phone Number:");
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Age:");
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel11.setText("Gender:");
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel16.setText("Enter Organization:");
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Volunteer ID:");
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(0, 0, 0));
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel17.setText("State:");
 
-        Create.setBackground(new java.awt.Color(255, 255, 255));
-        Create.setForeground(new java.awt.Color(0, 0, 0));
         Create.setText("Create");
+        Create.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CreateActionPerformed(evt);
+            }
+        });
 
-        Update.setBackground(new java.awt.Color(255, 255, 255));
-        Update.setForeground(new java.awt.Color(0, 0, 0));
         Update.setText("Update");
+        Update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UpdateActionPerformed(evt);
+            }
+        });
 
-        Delete.setBackground(new java.awt.Color(255, 255, 255));
-        Delete.setForeground(new java.awt.Color(0, 0, 0));
         Delete.setText("Delete");
+        Delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteActionPerformed(evt);
+            }
+        });
 
-        Search.setBackground(new java.awt.Color(255, 255, 255));
-        Search.setForeground(new java.awt.Color(0, 0, 0));
         Search.setText("Search");
         Search.setToolTipText("");
+        Search.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout VoldirLayout = new javax.swing.GroupLayout(Voldir);
         Voldir.setLayout(VoldirLayout);
@@ -433,50 +482,14 @@ public class Packandstoreadmin extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Volunteer Directory", Voldir);
 
-        jPanel3.setBackground(new java.awt.Color(216, 235, 239));
-
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Food Name", "Weight", "Date", "Expiry Date"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane3.setViewportView(jTable2);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 557, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(570, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(526, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("Storage", jPanel3);
-
         jLabel2.setBackground(new java.awt.Color(216, 235, 239));
         jLabel2.setFont(new java.awt.Font("NexaBlack", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("WELCOME");
+
+        jPackagingAdmin.setBackground(new java.awt.Color(216, 235, 239));
+        jPackagingAdmin.setFont(new java.awt.Font("NexaBlack", 1, 24)); // NOI18N
+        jPackagingAdmin.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -486,14 +499,21 @@ public class Packandstoreadmin extends javax.swing.JFrame {
                 .addGap(17, 17, 17)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPackagingAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(49, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(jPackagingAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 835, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -516,6 +536,427 @@ public class Packandstoreadmin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String recipients_id = jRecipientID.getText();
+        String comments = jTextPane1.getText();
+        String approve = "Approved";
+        try {
+
+            String sql = "Update recipients_details set recipients_status=?, recipients_comments=? where recipients_id=?";
+
+            pst = con.prepareStatement(sql);
+            pst.setString(1, approve);
+            pst.setString(2, comments);
+            pst.setString(3, recipients_id);
+
+            pst.execute();
+            JOptionPane.showMessageDialog(this, "Successfully Updated", "Request", JOptionPane.INFORMATION_MESSAGE);
+            jRecipientID.setText("");
+            packageRequestsTable();
+
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        int SelectIndex = jTable1.getSelectedRow();
+
+        jRecipientID.setText(model.getValueAt(SelectIndex, 1).toString());
+
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        String recipients_id = jRecipientID.getText();
+        String comments = jTextPane1.getText();
+        String decline = "Declined";
+        try {
+
+            String sql = "Update recipients_details set recipients_status=?, recipients_comments=? where recipients_id=?";
+
+            pst = con.prepareStatement(sql);
+            pst.setString(1, decline);
+            pst.setString(2, comments);
+            pst.setString(3, recipients_id);
+
+            pst.execute();
+            JOptionPane.showMessageDialog(this, "Successfully Updated", "Request", JOptionPane.INFORMATION_MESSAGE);
+            jRecipientID.setText("");
+            packageRequestsTable();
+
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        Login lg = new Login();
+        lg.setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void CreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateActionPerformed
+        // TODO add your handling code here:
+        if (jVuname.getText().isBlank() || jVpass.getText().isBlank() || jVname.getText().isBlank() || jVgen.getText().isBlank() || jVage.getText().isBlank()
+                || jVstat.getText().isBlank() || jVorg.getText().isBlank() || jVadr.getText().isBlank() || jVct.getText().isBlank() || jVst.getText().isEmpty() || jVcon.getText().isBlank() || jVzip.getText().isBlank()
+                || jVnum.getText().isBlank() || jVmail.getText().isBlank()) {
+            JOptionPane.showMessageDialog(this,
+                    "Please Enter All Fields",
+                    "Try Again",
+                    JOptionPane.ERROR_MESSAGE);
+        } else {
+
+            if (!Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$", jVname.getText())) {
+                JOptionPane.showMessageDialog(this, "Please Enter Valid Name  !!!");
+            } else if (!Pattern.matches("^[0-9].*$", jVage.getText())) {
+                JOptionPane.showMessageDialog(this, "Please Enter Valid Age !!!");
+            } else if (!Pattern.matches("^[0-9].*$", jVzip.getText())) {
+                JOptionPane.showMessageDialog(this, "Please Enter Valid Number !!!");
+
+            } else if (!Pattern.matches("\\d{10}", jVnum.getText())) {
+                JOptionPane.showMessageDialog(this, "Please Enter Valid Number  !!!");
+
+            } else if (!Pattern.matches("^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[a-z]{2,4}$", jVmail.getText())) {
+                JOptionPane.showMessageDialog(this, "Please Enter Valid Email !!!");
+            } else {
+                DefaultTableModel model = (DefaultTableModel) jTable4.getModel();
+                String empid = jVuname.getText();
+                String Pass = jVpass.getText();
+                String Name = jVname.getText();
+                String Gender = jVgen.getText();
+                long Age = Long.parseLong(jVage.getText());
+                String Status = jVstat.getText();
+                String org = jVorg.getText();
+                String Addr = jVadr.getText();
+                String City = jVct.getText();
+                String State = jVst.getText();
+                String Country = jVcon.getText();
+                String Zip = jVzip.getText();
+                long Phone = Long.parseLong(jVnum.getText());
+                String Email = jVmail.getText();
+
+                try {
+
+                    String qry = "Insert into volunteer_registration (User_Name,Password,Name,Gender,Age,Status, Organization, Address,City,State,Country,ZipCode,Phone_Number,Email) value(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    pst = con.prepareStatement(qry);
+                    pst.setString(1, empid);
+                    pst.setString(2, Pass);
+                    pst.setString(3, Name);
+                    pst.setString(4, Gender);
+                    pst.setLong(5, Age);
+                    pst.setString(6, Status);
+                    pst.setString(7, org);
+                    pst.setString(8, Addr);
+                    pst.setString(9, City);
+                    pst.setString(10, State);
+                    pst.setString(11, Country);
+                    pst.setString(12, Zip);
+                    pst.setLong(13, Phone);
+                    pst.setString(14, Email);
+
+                    pst.execute();
+                    jVuname.setText("");
+                    jVpass.setText("");
+                    jVname.setText("");
+                    jVgen.setText("");
+                    jVage.setText("");
+                    jVstat.setText("");
+                    jVorg.setText("");
+                    jVadr.setText("");
+                    jVct.setText("");
+                    jVst.setText("");
+                    jVcon.setText("");
+                    jVzip.setText("");
+                    jVnum.setText("");
+                    jVmail.setText("");
+                    
+                    volunteerTable();
+
+                    JOptionPane.showMessageDialog(null, "Saved");
+
+                } catch (SQLException ex) {
+                    Logger.getLogger(LogisticAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+
+        }
+
+    }//GEN-LAST:event_CreateActionPerformed
+
+    private void jTable4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable4MouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) jTable4.getModel();
+        int SelectIndex = jTable4.getSelectedRow();
+       
+        jVuname.setText(model.getValueAt(SelectIndex, 0).toString());
+        jVpass.setText(model.getValueAt(SelectIndex, 1).toString());
+        jVname.setText(model.getValueAt(SelectIndex, 2).toString());
+        jVgen.setText(model.getValueAt(SelectIndex, 3).toString());
+        jVage.setText(model.getValueAt(SelectIndex, 4).toString());
+        jVstat.setText(model.getValueAt(SelectIndex, 5).toString());
+        jVorg.setText(model.getValueAt(SelectIndex, 6).toString());
+        jVadr.setText(model.getValueAt(SelectIndex, 7).toString());
+        jVct.setText(model.getValueAt(SelectIndex, 8).toString());
+        jVst.setText(model.getValueAt(SelectIndex, 9).toString());
+        jVcon.setText(model.getValueAt(SelectIndex, 10).toString());
+        jVzip.setText(model.getValueAt(SelectIndex, 11).toString());
+        jVnum.setText(model.getValueAt(SelectIndex, 12).toString());
+        jVmail.setText(model.getValueAt(SelectIndex, 13).toString());
+        
+    }//GEN-LAST:event_jTable4MouseClicked
+
+    private void UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) jTable4.getModel();
+           
+        if(jVuname.getText().isBlank() || jVpass.getText().isBlank() || jVname.getText().isBlank() || jVgen.getText().isBlank() || jVage.getText().isBlank()
+                || jVstat.getText().isBlank() || jVorg.getText().isBlank() || jVadr.getText().isBlank() || jVct.getText().isBlank() || jVst.getText().isEmpty() || jVcon.getText().isBlank() || jVzip.getText().isBlank()
+                || jVnum.getText().isBlank() || jVmail.getText().isBlank())
+        {
+            JOptionPane.showMessageDialog(this,
+                    "Please Enter All Fields",
+                    "Try Again",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        else{
+           
+            if(!Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",jVuname.getText()))
+            {
+                JOptionPane.showMessageDialog(this,"Please Enter Valid Name  !!!");
+            }
+            else if(!Pattern.matches("^[0-9].*$",jVage.getText()))
+            {
+                JOptionPane.showMessageDialog(this,"Please Enter Valid Age !!!");
+            }
+            else if(!Pattern.matches("^[0-9].*$", jVzip.getText()))
+            {
+                JOptionPane.showMessageDialog(this,"Please Enter Valid Number !!!");
+                
+            }
+            else if (!Pattern.matches("\\d{10}",jVnum.getText()))
+            {
+                JOptionPane.showMessageDialog(this, "Please Enter Valid Number  !!!");
+                
+            }
+            else if(!Pattern.matches("^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[a-z]{2,4}$",jVmail.getText()))
+            {
+                JOptionPane.showMessageDialog(this,"Please Enter Valid Email !!!");
+            }
+            else{
+                
+                 String User_Name = jVuname.getText();
+        String Pass = jVpass.getText();
+        String Name  = jVname.getText();
+        String Gender =jVgen.getText();
+        long Age = Long.parseLong(jVage.getText());
+        String status = jVstat.getText();
+        String org = jVorg.getText();
+        String address = jVadr.getText();
+        String City = jVct.getText();
+        String State = jVst.getText();
+        String Country = jVcon.getText();
+        String Zip = jVzip.getText();
+        long Phone =Long.parseLong(jVnum.getText());
+        String Email = jVmail.getText();
+                
+                try {
+                 
+                 String qry ="Update volunteer_registration set Password=?,Name=?,Gender=?,Age=?,Status=?, Organization=?, Address=?,City=?,State=?,Country=?,ZipCode=?,Phone_Number=?,Email=? where User_Name=?";
+                    pst = con.prepareStatement(qry);
+                    pst.setString(1, Pass);
+                    pst.setString(2, Name);
+                    pst.setString(3, Gender);
+                    pst.setLong(4, Age);
+                    pst.setString(5, status);
+                    pst.setString(6, org);
+                    pst.setString(7, address);
+                    pst.setString(8, City);
+                    pst.setString(9, State);
+                    pst.setString(10, Country);
+                    pst.setString(11, Zip);
+                    pst.setLong(12, Phone);
+                    pst.setString(13, Email);
+                    pst.setString(14, User_Name);
+              
+                              
+                    pst.execute();
+                    jVuname.setText("");
+                    jVpass.setText("");
+                    jVname.setText("");
+                    jVgen.setText("");
+                    jVage.setText("");
+                    jVstat.setText("");
+                    jVorg.setText("");
+                    jVadr.setText("");
+                    jVct.setText("");
+                    jVst.setText("");
+                    jVcon.setText("");
+                    jVzip.setText("");
+                    jVnum.setText("");
+                    jVmail.setText("");
+                    
+                    volunteerTable();                
+                
+                 JOptionPane.showMessageDialog(null, "Information is updated!!!" );
+                } catch (SQLException ex) {
+                    Logger.getLogger(LogisticAdmin.class.getName()).log(Level.SEVERE, null, ex);
+                }
+        
+        
+            }
+     
+        }
+    }//GEN-LAST:event_UpdateActionPerformed
+
+    private void DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionPerformed
+        // TODO add your handling code here:
+        int Row = jTable4.getSelectedRow();
+         
+         if (Row <0)
+          {
+             JOptionPane.showMessageDialog(this,
+                "No Row is selected! Please select one Row!!",
+                "select Row",
+
+                JOptionPane.ERROR_MESSAGE);
+
+         }
+         else{
+             
+             DefaultTableModel model = (DefaultTableModel) jTable4.getModel();
+              model.removeRow(Row);
+              
+              String Empid = jVuname.getText();
+              
+                 
+            try {
+                String qry ="delete from  volunteer_registration where User_Name=?";
+                pst =con.prepareStatement(qry);
+                pst.setString(1, Empid);
+                pst.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(LogisticAdmin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+             JOptionPane.showMessageDialog(null, "Deleted !!" );
+             
+             jVuname.setText("");
+                    jVpass.setText("");
+                    jVname.setText("");
+                    jVgen.setText("");
+                    jVage.setText("");
+                    jVstat.setText("");
+                    jVorg.setText("");
+                    jVadr.setText("");
+                    jVct.setText("");
+                    jVst.setText("");
+                    jVcon.setText("");
+                    jVzip.setText("");
+                    jVnum.setText("");
+                    jVmail.setText("");
+                    
+                
+             
+         }
+        
+        
+        
+    }//GEN-LAST:event_DeleteActionPerformed
+
+    private void SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchActionPerformed
+        // TODO add your handling code here:
+        String s = jSearch.getText();
+        filter(s);
+    }//GEN-LAST:event_SearchActionPerformed
+
+    private void filter(String s) {
+        DefaultTableModel model = (DefaultTableModel) jTable4.getModel();
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(model);
+        jTable4.setRowSorter(tr);
+        tr.setRowFilter(RowFilter.regexFilter(s));
+    }
+    
+    private void packageRequestsTable() {
+        try {
+            pst = con.prepareCall("Select * from recipients_details");
+            rs = pst.executeQuery();
+            ResultSetMetaData result = (ResultSetMetaData) rs.getMetaData();
+            int c;
+            c = result.getColumnCount();
+
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+
+            while (rs.next()) {
+                Vector vector = new Vector();
+                for (int i = 1; i <= c; i++) {
+                    vector.add(rs.getString("recipient_request_id"));
+                    vector.add(rs.getString("recipients_id"));
+                    vector.add(rs.getString("recipient_name"));
+                    vector.add(rs.getString("recipient_address"));
+                    vector.add(rs.getString("recipients_organization"));
+                    vector.add(rs.getString("recipients_food_name"));
+                    vector.add(rs.getString("recipient_foodweight"));
+                    vector.add(rs.getString("recipient_date"));
+                    vector.add(rs.getString("recipients_status"));
+                    vector.add(rs.getString("recipients_comments"));
+
+                }
+                model.addRow(vector);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Packandstoreadmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+   private void volunteerTable() {
+        try {
+            pst = con.prepareCall("Select * from volunteer_registration");
+            rs = pst.executeQuery();
+            ResultSetMetaData result = (ResultSetMetaData) rs.getMetaData();
+            int c;
+            c = result.getColumnCount();
+
+            DefaultTableModel model = (DefaultTableModel) jTable4.getModel();
+            model.setRowCount(0);
+
+            while (rs.next()) {
+                Vector vector = new Vector();
+                for (int i = 1; i <= c; i++) {
+                    vector.add(rs.getString("User_Name"));
+                    vector.add(rs.getString("Password"));
+                    vector.add(rs.getString("Name"));
+                    vector.add(rs.getString("Gender"));
+                    vector.add(rs.getString("Age"));
+                    vector.add(rs.getString("Status"));
+                    vector.add(rs.getString("Organization"));
+                    vector.add(rs.getString("Address"));
+                    vector.add(rs.getString("City"));
+                    vector.add(rs.getString("State"));
+                    vector.add(rs.getString("Country"));
+                    vector.add(rs.getString("ZipCode"));
+                    vector.add(rs.getString("Phone_Number"));
+                    vector.add(rs.getString("Email"));
+                    
+
+                }
+                model.addRow(vector);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(Packandstoreadmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -561,20 +1002,19 @@ public class Packandstoreadmin extends javax.swing.JFrame {
     private javax.swing.JPanel Voldir;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jPackagingAdmin;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
+    private javax.swing.JTextField jRecipientID;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTextField jSearch;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable4;
     private javax.swing.JTextPane jTextPane1;
     private javax.swing.JTextField jVadr;
