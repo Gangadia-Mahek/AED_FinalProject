@@ -669,9 +669,9 @@ public class DonorRegistration extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
         }
         else{
-            if( jPass.getText()!=jCPass.getText()){
-                JOptionPane.showMessageDialog(this,"Password are not matching","Error", HEIGHT);
-            }
+            //if( jPass.getText()!=jCPass.getText()){
+                //JOptionPane.showMessageDialog(this,"Password are not matching","Error", HEIGHT);
+            //}
         
             
             
@@ -680,7 +680,7 @@ public class DonorRegistration extends javax.swing.JFrame {
         
         
            
-            else if(!Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",jName.getText()))
+            if(!Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",jName.getText()))
             {
                 JOptionPane.showMessageDialog(this,"Please Enter Valid Name  !!!");
             }
@@ -704,7 +704,7 @@ public class DonorRegistration extends javax.swing.JFrame {
             else {
                  String username = jUname.getText();
           String pass = jPass.getText();
-         // String password = jCPass.getText();
+          String Cpass = jCPass.getText();
           String name = jName.getText();
           int age = Integer.parseInt(jAge.getText());
           String addr = jAddr.getText();
@@ -714,7 +714,15 @@ public class DonorRegistration extends javax.swing.JFrame {
           String zipcode = jZip.getText();
           String phone = jPhone.getText();
           String email = jEmail.getText();
-          //String MPass=pass;
+          String MPass=null;
+                if(pass.equals(Cpass))
+                {
+                    MPass = pass;
+            //JOptionPane.showMessageDialog(this, "Passwords are Not Matching", "Error", HEIGHT);
+                } 
+                else
+                {
+                    JOptionPane.showMessageDialog(this, "Passwords are Not Matching", "Error", HEIGHT);}
           
           
           
@@ -737,7 +745,7 @@ public class DonorRegistration extends javax.swing.JFrame {
             String sql ="Insert into donor_registration(User_Name,Password,Name,Gender, Age,Address,City,State,Country,ZipCode,Phone_Number,Email) value(?,?,?,?,?,?,?,?,?,?,?,?)";
             pst =con.prepareStatement (sql);
             pst.setString(1,username);
-            pst.setString(2,pass);
+            pst.setString(2,MPass);
             pst.setString(3,name);
             pst.setString(4, gender);
             pst.setInt(5,age);

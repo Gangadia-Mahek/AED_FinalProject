@@ -4,8 +4,16 @@
  */
 package food_donation;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.awt.HeadlessException;
+import static java.awt.image.ImageObserver.HEIGHT;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+
 
 /**
  *
@@ -16,8 +24,12 @@ public class RecipientReg extends javax.swing.JFrame {
     /**
      * Creates new form RecipientReg
      */
+    Connection con=null;
+    PreparedStatement pst=null;
+    ResultSet rs =null;
     public RecipientReg() {
         initComponents();
+        con = (Connection) Connect.ConnectDB();
         setExtendedState(RecipientReg.MAXIMIZED_BOTH);
     }
 
@@ -617,27 +629,30 @@ public class RecipientReg extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-
         String gender = "";
         if(jMale.isSelected())
-        {
-            gender = "Male";
-        }
-        if(jFemale.isSelected())
-        {
-            gender = "Female";
-        }
-
-        if(jUname.getText().isBlank()||jPass.getText().isBlank()||jCPass.getText().isBlank() ||jAge.getText().isBlank()|| jName.getText().isBlank()|| gender.equals("")||
-            jAddr.getText().isBlank()|| jCity.getText().isBlank()|| jState.getText().isBlank()|| jCountry.getText().isBlank()||jZip.getText().isEmpty()|| jPhone.getText().isBlank()|| jEmail.getText().isBlank())
+            {
+                gender = "Male";
+                
+            }
+            if(jFemale.isSelected())
+            {
+                gender = "Female";
+                
+            }
+        
+        if(jUname.getText().isBlank()||jPass.getText().isBlank()||jCPass.getText().isBlank() ||jAge.getText().isBlank()|| jName.getText().isBlank()|| gender.equals("")|| 
+                jAddr.getText().isBlank()|| jCity.getText().isBlank()|| jState.getText().isBlank()|| jCountry.getText().isBlank()||jZip.getText().isEmpty()|| jPhone.getText().isBlank()|| jEmail.getText().isBlank())
         {
             JOptionPane.showMessageDialog(this,
-                "Please Enter All Fields",
-                "Try Again",
-                JOptionPane.ERROR_MESSAGE);
+                    "Please Enter All Fields",
+                    "Try Again",
+                    JOptionPane.ERROR_MESSAGE);
         }
         else{
-
+            //if( jPass.getText()!=jCPass.getText()){
+                //JOptionPane.showMessageDialog(this,"Password are not matching","Error", HEIGHT);
+            //}
             if(!Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",jName.getText()))
             {
                 JOptionPane.showMessageDialog(this,"Please Enter Valid Name  !!!");
@@ -648,39 +663,81 @@ public class RecipientReg extends javax.swing.JFrame {
             }
             else if(!Pattern.matches("^[0-9].*$", jZip.getText()))
             {
+                JOptionPane.showMessageDialog(this,"Please Enter Valid Zip !!!");
+            }
+            else if(!Pattern.matches("\\d{10}", jPhone.getText()))
+            {
                 JOptionPane.showMessageDialog(this,"Please Enter Valid Number !!!");
             }
+            
             else if(!Pattern.matches("^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[a-z]{2,4}$",jEmail.getText()))
             {
                 JOptionPane.showMessageDialog(this,"Please Enter Valid Email !!!");
             }
             else {
-
                 String username = jUname.getText();
                 String pass = jPass.getText();
-                String password = jCPass.getText();
+                String Cpass = jCPass.getText();
                 String name = jName.getText();
                 int age = Integer.parseInt(jAge.getText());
                 String addr = jAddr.getText();
                 String city = jCity.getText();
                 String state = jState.getText();
                 String country = jCountry.getText();
-                int zipcode = Integer.parseInt(jZip.getText());
-                int phone = Integer.parseInt(jPhone.getText());
+                String zipcode = jZip.getText();
+                String phone = jPhone.getText();
                 String email = jEmail.getText();
                 String MPass=null;
-
-                if(pass.equals(password))
+                if(pass.equals(Cpass))
                 {
                     MPass = pass;
-                }
-                else{
-                    JOptionPane.showMessageDialog(this,"Password are not matching","Error", HEIGHT);
-                }
+            //JOptionPane.showMessageDialog(this, "Passwords are Not Matching", "Error", HEIGHT);
+                } 
+                else
+                {
+                    JOptionPane.showMessageDialog(this, "Passwords are Not Matching", "Error", HEIGHT);}
+          
+            
+                
+                try{
+                   Statement stmt;
+                   stmt= con.createStatement();
+                   String sql1="Select User_Name from recipient_registration where User_Name= '" + jUname.getText() + "'";
+                   rs=stmt.executeQuery(sql1);
+                   if(rs.next()){
+                       JOptionPane.showMessageDialog( this, " Username already exists","Error", JOptionPane.ERROR_MESSAGE);
+                       jUname.setText("");
+                       jUname.requestDefaultFocus();
+                       return;
+                   }
 
+            
+            String sql ="Insert into recipient_registration(User_Name,Password,Name,Gender, Age,Address,City,State,Country,ZipCode,Phone_Number,Email) value(?,?,?,?,?,?,?,?,?,?,?,?)";
+            pst =con.prepareStatement (sql);
+            pst.setString(1,username);
+            pst.setString(2,MPass);
+            pst.setString(3,name);
+            pst.setString(4, gender);
+            pst.setInt(5,age);
+            pst.setString(6,addr);
+            pst.setString(7,city);
+            pst.setString(8,state);
+            pst.setString(9,country);
+            pst.setString(10,zipcode);
+            pst.setString(11,phone);
+            pst.setString(12,email);
 
+            pst.execute();
+            
+            JOptionPane.showMessageDialog(this,"Successfully Registered","Donor",JOptionPane.INFORMATION_MESSAGE);
+                
+        }catch(HeadlessException | SQLException ex){
+            JOptionPane.showMessageDialog(this,ex);
+        }
+        
+        
             }
-
+            
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
