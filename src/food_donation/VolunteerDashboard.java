@@ -4,8 +4,20 @@
  */
 package food_donation;
 
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -13,12 +25,27 @@ import java.time.format.DateTimeFormatter;
  */
 public class VolunteerDashboard extends javax.swing.JFrame {
 
+    Connection con = null;
+    ResultSet rs = null;
+    PreparedStatement pst = null;
+
     /**
      * Creates new form VolunteerDashboard
      */
     public VolunteerDashboard() {
         initComponents();
-         setExtendedState(VolunteerDashboard.MAXIMIZED_BOTH);
+        con = Connect.ConnectDB();
+        VolunteersSlotsAvailabilityTable();
+        setExtendedState(VolunteerDashboard.MAXIMIZED_BOTH);
+    }
+    String vusername;
+
+    public VolunteerDashboard(String vusername) {
+        initComponents();
+        con = Connect.ConnectDB();
+        VolunteersSlotsAvailabilityTable();
+        this.vusername = vusername;
+        jLabel22.setText(vusername);
     }
 
     /**
@@ -40,6 +67,9 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable3 = new javax.swing.JTable();
+        jButton5 = new javax.swing.JButton();
         Signin = new javax.swing.JPanel();
         javax.swing.JLabel jLabel6 = new javax.swing.JLabel();
         javax.swing.JLabel jLabel7 = new javax.swing.JLabel();
@@ -88,14 +118,13 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         javax.swing.JSeparator jSeparator14 = new javax.swing.JSeparator();
         javax.swing.JLabel jLabel21 = new javax.swing.JLabel();
         javax.swing.JSeparator jSeparator15 = new javax.swing.JSeparator();
-        jAge1 = new javax.swing.JTextField();
-        jAge2 = new javax.swing.JTextField();
-        jName1 = new javax.swing.JTextField();
+        jOrg = new javax.swing.JTextField();
+        jStatus = new javax.swing.JTextField();
+        jGender = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -103,26 +132,55 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(216, 235, 239));
 
         jTabbedPane1.setBackground(new java.awt.Color(216, 235, 239));
-        jTabbedPane1.setForeground(new java.awt.Color(0, 0, 0));
         jTabbedPane1.setToolTipText("");
         jTabbedPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane1MouseClicked(evt);
+            }
+        });
 
         timeslots.setBackground(new java.awt.Color(216, 235, 239));
-        timeslots.setForeground(new java.awt.Color(0, 0, 0));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Day:");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Time:");
 
         jButton1.setText("Submit");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Booked Day", "Booked Time slots"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -138,12 +196,28 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jTable3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable3MouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(jTable3);
+
+        jButton5.setText("Change timeslot");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout timeslotsLayout = new javax.swing.GroupLayout(timeslots);
         timeslots.setLayout(timeslotsLayout);
         timeslotsLayout.setHorizontalGroup(
             timeslotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, timeslotsLayout.createSequentialGroup()
+                .addGap(0, 573, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(75, 75, 75))
             .addGroup(timeslotsLayout.createSequentialGroup()
                 .addGroup(timeslotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(timeslotsLayout.createSequentialGroup()
@@ -156,19 +230,24 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(timeslotsLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(101, 101, 101)
+                        .addComponent(jButton1))
                     .addGroup(timeslotsLayout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addComponent(jButton1)))
-                .addContainerGap(630, Short.MAX_VALUE))
+                        .addGap(80, 80, 80)
+                        .addComponent(jButton5)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(timeslotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(timeslotsLayout.createSequentialGroup()
+                    .addGap(28, 28, 28)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(620, Short.MAX_VALUE)))
         );
         timeslotsLayout.setVerticalGroup(
             timeslotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(timeslotsLayout.createSequentialGroup()
-                .addGap(40, 40, 40)
+                .addGap(51, 51, 51)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64)
+                .addGap(53, 53, 53)
                 .addGroup(timeslotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -178,7 +257,14 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(37, 37, 37)
                 .addComponent(jButton1)
-                .addContainerGap(322, Short.MAX_VALUE))
+                .addGap(26, 26, 26)
+                .addComponent(jButton5)
+                .addContainerGap(273, Short.MAX_VALUE))
+            .addGroup(timeslotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(timeslotsLayout.createSequentialGroup()
+                    .addGap(50, 50, 50)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(492, Short.MAX_VALUE)))
         );
 
         jTabbedPane1.addTab("TimeSlots", timeslots);
@@ -186,12 +272,10 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         Signin.setBackground(new java.awt.Color(216, 235, 239));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Date:");
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("Time:");
 
@@ -199,8 +283,6 @@ public class VolunteerDashboard extends javax.swing.JFrame {
 
         jTimein.setEditable(false);
 
-        checkin.setBackground(new java.awt.Color(255, 255, 255));
-        checkin.setForeground(new java.awt.Color(0, 0, 0));
         checkin.setText("Check IN");
         checkin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,7 +291,6 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         });
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("Date:");
 
@@ -218,12 +299,9 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jTimeout.setEditable(false);
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("Time:");
 
-        checkout.setBackground(new java.awt.Color(255, 255, 255));
-        checkout.setForeground(new java.awt.Color(0, 0, 0));
         checkout.setText("Check OUT");
         checkout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -252,9 +330,12 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jTable2);
 
-        jButton2.setBackground(new java.awt.Color(255, 255, 255));
-        jButton2.setForeground(new java.awt.Color(0, 0, 0));
         jButton2.setText("Sign In Details");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout SigninLayout = new javax.swing.GroupLayout(Signin);
         Signin.setLayout(SigninLayout);
@@ -333,7 +414,6 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jSeparator11.setForeground(new java.awt.Color(204, 204, 204));
 
         jCountry.setBackground(new java.awt.Color(216, 235, 239));
-        jCountry.setForeground(new java.awt.Color(0, 0, 0));
         jCountry.setBorder(null);
         jCountry.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -342,7 +422,6 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         });
 
         jCity.setBackground(new java.awt.Color(216, 235, 239));
-        jCity.setForeground(new java.awt.Color(0, 0, 0));
         jCity.setBorder(null);
         jCity.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -351,7 +430,6 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         });
 
         jName.setBackground(new java.awt.Color(216, 235, 239));
-        jName.setForeground(new java.awt.Color(0, 0, 0));
         jName.setBorder(null);
         jName.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -360,7 +438,6 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         });
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel11.setText("Gender:");
 
@@ -368,7 +445,6 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jSeparator4.setForeground(new java.awt.Color(204, 204, 204));
 
         jEmail.setBackground(new java.awt.Color(216, 235, 239));
-        jEmail.setForeground(new java.awt.Color(0, 0, 0));
         jEmail.setBorder(null);
         jEmail.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -377,17 +453,14 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         });
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel10.setText("State:");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel12.setText("City:");
 
         jZip.setBackground(new java.awt.Color(216, 235, 239));
-        jZip.setForeground(new java.awt.Color(0, 0, 0));
         jZip.setBorder(null);
         jZip.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -396,7 +469,6 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         });
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Age:");
 
@@ -404,7 +476,6 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jSeparator5.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel13.setText("Phone Number:");
 
@@ -415,12 +486,10 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jSeparator6.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel15.setForeground(new java.awt.Color(0, 0, 0));
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel15.setText("Email:");
 
         jAddr.setBackground(new java.awt.Color(216, 235, 239));
-        jAddr.setForeground(new java.awt.Color(0, 0, 0));
         jAddr.setBorder(null);
         jAddr.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -429,12 +498,10 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         });
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel16.setText("Home Address:");
 
         jPhone.setBackground(new java.awt.Color(216, 235, 239));
-        jPhone.setForeground(new java.awt.Color(0, 0, 0));
         jPhone.setBorder(null);
         jPhone.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -443,7 +510,6 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         });
 
         jState.setBackground(new java.awt.Color(216, 235, 239));
-        jState.setForeground(new java.awt.Color(0, 0, 0));
         jState.setBorder(null);
         jState.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -452,12 +518,10 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         });
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(0, 0, 0));
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel17.setText("Zipcode:");
 
         jAge.setBackground(new java.awt.Color(216, 235, 239));
-        jAge.setForeground(new java.awt.Color(0, 0, 0));
         jAge.setBorder(null);
         jAge.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -472,12 +536,10 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jSeparator8.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel18.setForeground(new java.awt.Color(0, 0, 0));
         jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel18.setText("Name:");
 
         jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel19.setForeground(new java.awt.Color(0, 0, 0));
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel19.setText("Country:");
 
@@ -488,7 +550,6 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jSeparator13.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel20.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel20.setForeground(new java.awt.Color(0, 0, 0));
         jLabel20.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel20.setText("Select Status:");
 
@@ -496,47 +557,43 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jSeparator14.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel21.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel21.setForeground(new java.awt.Color(0, 0, 0));
         jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel21.setText("Enter Organization:");
 
         jSeparator15.setBackground(new java.awt.Color(204, 204, 204));
         jSeparator15.setForeground(new java.awt.Color(204, 204, 204));
 
-        jAge1.setBackground(new java.awt.Color(216, 235, 239));
-        jAge1.setForeground(new java.awt.Color(0, 0, 0));
-        jAge1.setBorder(null);
-        jAge1.addMouseListener(new java.awt.event.MouseAdapter() {
+        jOrg.setBackground(new java.awt.Color(216, 235, 239));
+        jOrg.setBorder(null);
+        jOrg.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jAge1MousePressed(evt);
+                jOrgMousePressed(evt);
             }
         });
 
-        jAge2.setBackground(new java.awt.Color(216, 235, 239));
-        jAge2.setForeground(new java.awt.Color(0, 0, 0));
-        jAge2.setBorder(null);
-        jAge2.addMouseListener(new java.awt.event.MouseAdapter() {
+        jStatus.setEditable(false);
+        jStatus.setBackground(new java.awt.Color(216, 235, 239));
+        jStatus.setBorder(null);
+        jStatus.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jAge2MousePressed(evt);
+                jStatusMousePressed(evt);
             }
         });
 
-        jName1.setBackground(new java.awt.Color(216, 235, 239));
-        jName1.setForeground(new java.awt.Color(0, 0, 0));
-        jName1.setBorder(null);
-        jName1.addMouseListener(new java.awt.event.MouseAdapter() {
+        jGender.setBackground(new java.awt.Color(216, 235, 239));
+        jGender.setBorder(null);
+        jGender.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jName1MousePressed(evt);
+                jGenderMousePressed(evt);
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(255, 255, 255));
-        jButton3.setForeground(new java.awt.Color(0, 0, 0));
         jButton3.setText("Update");
-
-        jButton4.setBackground(new java.awt.Color(255, 255, 255));
-        jButton4.setForeground(new java.awt.Color(0, 0, 0));
-        jButton4.setText("Refresh");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout vprofileLayout = new javax.swing.GroupLayout(vprofile);
         vprofile.setLayout(vprofileLayout);
@@ -578,7 +635,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                                         .addGap(29, 29, 29)
                                         .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jName1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jGender, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, vprofileLayout.createSequentialGroup()
                                         .addGap(32, 32, 32)
                                         .addGroup(vprofileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -589,7 +646,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                                             .addGroup(vprofileLayout.createSequentialGroup()
                                                 .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addGap(18, 18, 18)
-                                                .addComponent(jAge2, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                .addComponent(jStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, vprofileLayout.createSequentialGroup()
                                         .addGap(68, 68, 68)
                                         .addGroup(vprofileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -625,7 +682,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                             .addGroup(vprofileLayout.createSequentialGroup()
                                 .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jAge1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jOrg, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(vprofileLayout.createSequentialGroup()
                                 .addGap(36, 36, 36)
                                 .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -633,9 +690,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                                 .addComponent(jAddr, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(vprofileLayout.createSequentialGroup()
                         .addGap(150, 150, 150)
-                        .addComponent(jButton3)
-                        .addGap(38, 38, 38)
-                        .addComponent(jButton4)))
+                        .addComponent(jButton3)))
                 .addContainerGap(434, Short.MAX_VALUE))
         );
         vprofileLayout.setVerticalGroup(
@@ -650,7 +705,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(vprofileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(jName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -662,13 +717,13 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(vprofileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel20)
-                    .addComponent(jAge2, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator14, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(vprofileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel21)
-                    .addComponent(jAge1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jOrg, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator15, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -716,9 +771,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator12, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(vprofileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4))
+                .addComponent(jButton3)
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
@@ -726,9 +779,12 @@ public class VolunteerDashboard extends javax.swing.JFrame {
 
         jLabel2.setBackground(new java.awt.Color(216, 235, 239));
         jLabel2.setFont(new java.awt.Font("NexaBlack", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("WELCOME");
+
+        jLabel22.setBackground(new java.awt.Color(216, 235, 239));
+        jLabel22.setFont(new java.awt.Font("NexaBlack", 1, 24)); // NOI18N
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -738,7 +794,9 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(17, 17, 17)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -747,8 +805,13 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1)
                 .addGap(12, 12, 12))
@@ -757,11 +820,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(134, 197, 197));
         jPanel1.setPreferredSize(new java.awt.Dimension(457, 494));
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\shubh\\OneDrive\\Documents\\vl.png")); // NOI18N
-
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Volunteers for humanity !!!");
 
@@ -770,21 +829,14 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(69, 69, 69)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addGap(69, 69, 69)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(68, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(128, 128, 128)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(502, 502, 502)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -807,48 +859,43 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void ctime()
-    {
-        DateTimeFormatter times = DateTimeFormatter .ofPattern("hh : mm a");
+    public void ctime() {
+        DateTimeFormatter times = DateTimeFormatter.ofPattern("hh : mm a");
         LocalDateTime now = LocalDateTime.now();
         jTimein.setText(times.format(now));
     }
-    
-     public void cdate()
-    {
-        DateTimeFormatter dates = DateTimeFormatter .ofPattern("yyyy/MM/dd");
+
+    public void cdate() {
+        DateTimeFormatter dates = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDateTime now = LocalDateTime.now();
         jDatein.setText(dates.format(now));
     }
-     
-      public void otime()
-    {
-        DateTimeFormatter times = DateTimeFormatter .ofPattern("hh : mm a");
+
+    public void otime() {
+        DateTimeFormatter times = DateTimeFormatter.ofPattern("hh : mm a");
         LocalDateTime now = LocalDateTime.now();
         jTimeout.setText(times.format(now));
     }
-    
-     public void odate()
-    {
-        DateTimeFormatter dates = DateTimeFormatter .ofPattern("yyyy/MM/dd");
+
+    public void odate() {
+        DateTimeFormatter dates = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDateTime now = LocalDateTime.now();
         jDateout.setText(dates.format(now));
     }
-    
-    
-    
+
+
     private void checkinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkinActionPerformed
         // TODO add your handling code here:
-        
+
         ctime();
         cdate();
-        
-        
+
+
     }//GEN-LAST:event_checkinActionPerformed
 
     private void checkoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutActionPerformed
         // TODO add your handling code here:
-         otime();
+        otime();
         odate();
     }//GEN-LAST:event_checkoutActionPerformed
 
@@ -897,17 +944,325 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jAge.setText("");
     }//GEN-LAST:event_jAgeMousePressed
 
-    private void jAge1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jAge1MousePressed
+    private void jOrgMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jOrgMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jAge1MousePressed
+    }//GEN-LAST:event_jOrgMousePressed
 
-    private void jAge2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jAge2MousePressed
+    private void jStatusMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jStatusMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jAge2MousePressed
+    }//GEN-LAST:event_jStatusMousePressed
 
-    private void jName1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jName1MousePressed
+    private void jGenderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jGenderMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jName1MousePressed
+    }//GEN-LAST:event_jGenderMousePressed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+        int SelectIndex = jTable3.getSelectedRow();
+
+        jTextField1.setText(model.getValueAt(SelectIndex, 0).toString());
+        jTextField2.setText(model.getValueAt(SelectIndex, 1).toString());
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        try {
+            String date = jTextField1.getText();
+            String time = jTextField2.getText();
+            String vid = jLabel22.getText();
+
+            String sql = "Insert into volunteer_booked_time(volunteer_booked_day, volunteer_booked_timing, vid) value(?,?,?)";
+
+            pst = con.prepareStatement(sql);
+            pst.setString(1, date);
+            pst.setString(2, time);
+            pst.setString(3, vid);
+            pst.execute();
+
+            jTextField1.setText("");
+            jTextField2.setText("");
+
+            JOptionPane.showMessageDialog(this, "Submitted", "Time booking", JOptionPane.INFORMATION_MESSAGE);
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTable3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable3MouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+        int SelectIndex = jTable3.getSelectedRow();
+
+        jTextField1.setText(model.getValueAt(SelectIndex, 0).toString());
+        jTextField2.setText(model.getValueAt(SelectIndex, 1).toString());
+    }//GEN-LAST:event_jTable3MouseClicked
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        try {
+            String date = jTextField1.getText();
+            String time = jTextField2.getText();
+            String vid = jLabel22.getText();
+
+            String sql = "Update volunteer_booked_time set volunteer_booked_day=? volunteer_booked_timing=? where vid=?";
+
+            pst = con.prepareStatement(sql);
+            pst.setString(1, date);
+            pst.setString(2, time);
+            pst.setString(3, vid);
+            pst.execute();
+
+            jTextField1.setText("");
+            jTextField2.setText("");
+
+            JOptionPane.showMessageDialog(this, "Submitted", "Time booking", JOptionPane.INFORMATION_MESSAGE);
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        try {
+            String in_date = jDatein.getText();
+            String in_time = jTimein.getText();
+            String out_date = jDateout.getText();
+            String out_time = jTimeout.getText();
+            String vid = jLabel22.getText();
+
+            String sql = "Insert into shift_sign_in (shift_sign_in_date, shift_sign_in_time, shift_sign_out_date, shift_sign_out_time,vid) value (?,?,?,?,?)";
+
+            pst = con.prepareStatement(sql);
+            pst.setString(1, in_date);
+            pst.setString(2, in_time);
+            pst.setString(3, out_date);
+            pst.setString(4, out_time);
+            pst.setString(5, vid);
+            pst.execute();
+
+            jDatein.setText("");
+            jTimein.setText("");
+            jDateout.setText("");
+            jTimeout.setText("");
+
+            JOptionPane.showMessageDialog(this, "Submitted", "Time booking", JOptionPane.INFORMATION_MESSAGE);
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        // TODO add your handling code here:
+        addinfo();
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        String name = jName.getText();
+        String gender = jGender.getText();
+        int age = Integer.parseInt(jAge.getText());
+        String status = jStatus.getText();
+        String Org = jOrg.getText();
+        String address = jAddr.getText();
+        String city = jCity.getText();
+        String state = jState.getText();
+        String country = jCountry.getText();
+        String zip = jZip.getText();
+        String phone = jPhone.getText();
+        String email = jEmail.getText();
+        String vid = jLabel22.getText();
+        try {
+            if (jName.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Name", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jGender.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Gender", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jAge.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Age", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+
+            if (jOrg.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Organization", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jAddr.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Address", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jCity.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter City", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jState.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter State", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jCountry.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Country", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jZip.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Zip", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jPhone.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Phone", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jEmail.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Email", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            Statement stmt;
+            stmt = con.createStatement();
+
+            if (rs.next()) {
+
+                return;
+            }
+            String sql = "Update volunteer_regsitration set Name=?,Gender=?,Age=?,Status=?, Organization=?,Address=?,City=?,State=?,Country=?,ZipCode=?,Phone_Number=?,Email=? WHERE User_Name=?";
+            pst = con.prepareStatement(sql);
+
+            pst.setString(1, name);
+            pst.setString(2, gender);
+            pst.setInt(3, age);
+            pst.setString(4, status);
+            pst.setString(5, Org);
+            pst.setString(6, address);
+            pst.setString(7, city);
+            pst.setString(8, state);
+            pst.setString(9, country);
+            pst.setString(10, zip);
+            pst.setString(11, phone);
+            pst.setString(12, email);
+            pst.setString(13, vid);
+
+            pst.execute();
+            JOptionPane.showMessageDialog(this, "Successfully updated", "VolunteerDetails", JOptionPane.INFORMATION_MESSAGE);
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+
+        }
+
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    public void addinfo() {
+
+        String vid = jLabel22.getText();
+        try {
+
+            String qry = "Select * from volunteer_registration where User_Name= ? ";
+            pst = con.prepareStatement(qry);
+            pst.setString(1, vid);
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+
+                String n = rs.getString(3);
+                String g = rs.getString(4);
+                String ag = rs.getString(5);
+                String sta = rs.getString(6);
+                String org = rs.getString(7);
+                String addr = rs.getString(8);
+                String city = rs.getString(9);
+                String st = rs.getString(10);
+                String country = rs.getString(11);
+                String zip = rs.getString(12);
+                String ph = rs.getString(13);
+                String em = rs.getString(14);
+
+                jName.setText(n);
+                jGender.setText(g);
+                jAge.setText(ag);
+                jStatus.setText(sta);
+                jOrg.setText(org);
+                jAddr.setText(addr);
+                jCity.setText(city);
+                jState.setText(st);
+                jCountry.setText(country);
+                jZip.setText(zip);
+                jPhone.setText(ph);
+                jEmail.setText(em);
+
+            }
+
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+
+    }
+
+    private void VolunteersSlotsAvailabilityTable() {
+        try {
+            pst = con.prepareCall("Select * from time_slots_availability");
+            rs = pst.executeQuery();
+            ResultSetMetaData result = (ResultSetMetaData) rs.getMetaData();
+            int c;
+            c = result.getColumnCount();
+
+            DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
+            model.setRowCount(0);
+
+            while (rs.next()) {
+                Vector vector = new Vector();
+                for (int i = 1; i <= c; i++) {
+                    vector.add(rs.getString("time_slots_availability_day"));
+                    vector.add(rs.getString("time_slots_availability_timeslots"));
+
+                }
+                model.addRow(vector);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(VolunteerDashboard.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void vRequestsTable() {
+        try {
+            String vid = jLabel22.getText();
+            pst = con.prepareCall("Select * from volunteer_booked_time where vid=?");
+            rs = pst.executeQuery();
+            ResultSetMetaData result = (ResultSetMetaData) rs.getMetaData();
+            int c;
+            c = result.getColumnCount();
+
+            DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+            model.setRowCount(0);
+
+            while (rs.next()) {
+                Vector vector = new Vector();
+                for (int i = 1; i <= c; i++) {
+                    vector.add(rs.getString("volunteer_booked_day"));
+                    vector.add(rs.getString("volunteer_booked_timing"));
+
+                }
+                model.addRow(vector);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DonorAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -950,31 +1305,33 @@ public class VolunteerDashboard extends javax.swing.JFrame {
     private javax.swing.JButton checkout;
     private javax.swing.JTextField jAddr;
     private javax.swing.JTextField jAge;
-    private javax.swing.JTextField jAge1;
-    private javax.swing.JTextField jAge2;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JTextField jCity;
     private javax.swing.JTextField jCountry;
     private javax.swing.JTextField jDatein;
     private javax.swing.JTextField jDateout;
     private javax.swing.JTextField jEmail;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JTextField jGender;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField jName;
-    private javax.swing.JTextField jName1;
+    private javax.swing.JTextField jOrg;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jPhone;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTextField jState;
+    private javax.swing.JTextField jStatus;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
+    private javax.swing.JTable jTable3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTimein;
