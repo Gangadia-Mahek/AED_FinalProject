@@ -4,18 +4,52 @@
  */
 package food_donation;
 
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 /**
  *
  * @author shubh
  */
 public class DonorAdmin extends javax.swing.JFrame {
 
+    Connection con = null;
+    ResultSet rs = null;
+    PreparedStatement pst = null;
+
     /**
      * Creates new form DonorAdmin
      */
     public DonorAdmin() {
         initComponents();
+        con = Connect.ConnectDB();
+        donorTable();
+        donorRequestsTable();
         setExtendedState(DonorAdmin.MAXIMIZED_BOTH);
+    }
+    String adminusername;
+
+    public DonorAdmin(String username) {
+        initComponents();
+
+        con = Connect.ConnectDB();
+        donorTable();
+        donorRequestsTable();
+        setExtendedState(DonorAdmin.MAXIMIZED_BOTH);
+        this.adminusername = username;
+        jdonorAdmin.setText(adminusername);
     }
 
     /**
@@ -43,10 +77,8 @@ public class DonorAdmin extends javax.swing.JFrame {
         javax.swing.JLabel jLabel18 = new javax.swing.JLabel();
         javax.swing.JLabel jLabel19 = new javax.swing.JLabel();
         Update = new javax.swing.JButton();
-        javax.swing.JLabel jLabel7 = new javax.swing.JLabel();
         javax.swing.JLabel jLabel8 = new javax.swing.JLabel();
         jdonarid = new javax.swing.JTextField();
-        jpass = new javax.swing.JTextField();
         jname = new javax.swing.JTextField();
         jgender = new javax.swing.JTextField();
         jage = new javax.swing.JTextField();
@@ -67,7 +99,10 @@ public class DonorAdmin extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jApprove = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        jDecline = new javax.swing.JButton();
+        jdid = new javax.swing.JTextField();
+        jdonorAdmin = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -77,9 +112,13 @@ public class DonorAdmin extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(216, 235, 239));
 
         jTabbedPane1.setBackground(new java.awt.Color(216, 235, 239));
-        jTabbedPane1.setForeground(new java.awt.Color(0, 0, 0));
         jTabbedPane1.setToolTipText("");
         jTabbedPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane1MouseClicked(evt);
+            }
+        });
 
         Donodir.setBackground(new java.awt.Color(216, 235, 239));
 
@@ -88,95 +127,101 @@ public class DonorAdmin extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Donor ID", "Password", "Name", "Gender", "Age", "Home Address", "City", "State", "Country", "Zipcode", "Phone Number", "Email"
+                "Donor ID", "Name", "Gender", "Age", "Home Address", "City", "State", "Country", "Zipcode", "Phone Number", "Email"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTable1MousePressed(evt);
+            }
+        });
         jScrollPane3.setViewportView(jTable1);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Name:");
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel11.setText("Gender:");
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Age:");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel12.setText("Home Address: ");
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel13.setText("City: ");
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel15.setForeground(new java.awt.Color(0, 0, 0));
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel15.setText("State:");
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel16.setText("Country:");
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(0, 0, 0));
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel17.setText("Zipcode:");
 
         jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel18.setForeground(new java.awt.Color(0, 0, 0));
         jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel18.setText("Phone Number:");
 
         jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel19.setForeground(new java.awt.Color(0, 0, 0));
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel19.setText("Email:");
 
-        Update.setBackground(new java.awt.Color(255, 255, 255));
-        Update.setForeground(new java.awt.Color(0, 0, 0));
         Update.setText("Update");
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel7.setText("Password:");
+        Update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UpdateActionPerformed(evt);
+            }
+        });
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("Donor ID:");
 
-        Create.setBackground(new java.awt.Color(255, 255, 255));
-        Create.setForeground(new java.awt.Color(0, 0, 0));
+        jdonarid.setEditable(false);
+
         Create.setText("Create");
+        Create.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CreateActionPerformed(evt);
+            }
+        });
 
-        Delete.setBackground(new java.awt.Color(255, 255, 255));
-        Delete.setForeground(new java.awt.Color(0, 0, 0));
         Delete.setText("Delete");
+        Delete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                DeleteActionPerformed(evt);
+            }
+        });
 
-        Search.setBackground(new java.awt.Color(255, 255, 255));
-        Search.setForeground(new java.awt.Color(0, 0, 0));
         Search.setText("Search");
         Search.setToolTipText("");
+        Search.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout DonodirLayout = new javax.swing.GroupLayout(Donodir);
         Donodir.setLayout(DonodirLayout);
@@ -232,15 +277,6 @@ public class DonorAdmin extends javax.swing.JFrame {
                                     .addGap(18, 18, 18)
                                     .addComponent(jname))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, DonodirLayout.createSequentialGroup()
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jpass))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, DonodirLayout.createSequentialGroup()
-                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jdonarid, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(0, 0, Short.MAX_VALUE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, DonodirLayout.createSequentialGroup()
                                     .addGroup(DonodirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -250,7 +286,12 @@ public class DonorAdmin extends javax.swing.JFrame {
                                             .addComponent(jaddr))
                                         .addGroup(DonodirLayout.createSequentialGroup()
                                             .addGap(19, 19, 19)
-                                            .addComponent(jcity))))))))
+                                            .addComponent(jcity))))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, DonodirLayout.createSequentialGroup()
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jdonarid, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(0, 0, Short.MAX_VALUE))))))
                 .addGap(214, 214, 214))
             .addGroup(DonodirLayout.createSequentialGroup()
                 .addGap(141, 141, 141)
@@ -277,10 +318,6 @@ public class DonorAdmin extends javax.swing.JFrame {
                         .addComponent(jSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGroup(DonodirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(DonodirLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(DonodirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(jpass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(DonodirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
@@ -288,7 +325,7 @@ public class DonorAdmin extends javax.swing.JFrame {
                     .addGroup(DonodirLayout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addComponent(Search)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(DonodirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(jgender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -329,28 +366,32 @@ public class DonorAdmin extends javax.swing.JFrame {
                     .addComponent(Update)
                     .addComponent(Create)
                     .addComponent(Delete))
-                .addContainerGap(258, Short.MAX_VALUE))
+                .addContainerGap(280, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Donor Direcory", Donodir);
+        jTabbedPane1.addTab("Donor Directory", Donodir);
 
         donatereq.setBackground(new java.awt.Color(216, 235, 239));
-        donatereq.setForeground(new java.awt.Color(0, 0, 0));
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Request ID", "Donar ID", "Food Name", "Weight", "Expiry Date", "Time", "Date", "City", "Center Name", "Center Address", "Status"
+                "Request ID", "Donar ID", "Food Name", "Weight", "Expiry Date", "Time", "Date", "City", "Center Name", "Center Address", "Status", "Comments"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
             }
         });
         jScrollPane2.setViewportView(jTable2);
@@ -360,18 +401,34 @@ public class DonorAdmin extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         jApprove.setText("Approve");
+        jApprove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jApproveActionPerformed(evt);
+            }
+        });
+
+        jDecline.setText("Decline");
+        jDecline.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jDeclineActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout donatereqLayout = new javax.swing.GroupLayout(donatereq);
         donatereq.setLayout(donatereqLayout);
         donatereqLayout.setHorizontalGroup(
             donatereqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(donatereqLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
+                .addContainerGap()
                 .addGroup(donatereqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jApprove)
+                    .addComponent(jdid, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(donatereqLayout.createSequentialGroup()
+                        .addComponent(jApprove)
+                        .addGap(40, 40, 40)
+                        .addComponent(jDecline))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 980, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addContainerGap(114, Short.MAX_VALUE))
         );
         donatereqLayout.setVerticalGroup(
             donatereqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -380,18 +437,25 @@ public class DonorAdmin extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(50, 50, 50)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57)
-                .addComponent(jApprove)
+                .addGap(18, 18, 18)
+                .addComponent(jdid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(17, 17, 17)
+                .addGroup(donatereqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jApprove)
+                    .addComponent(jDecline))
                 .addContainerGap(379, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Donation Requests", donatereq);
 
-        jLabel2.setBackground(new java.awt.Color(216, 235, 239));
-        jLabel2.setFont(new java.awt.Font("NexaBlack", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("WELCOME");
+        jdonorAdmin.setBackground(new java.awt.Color(216, 235, 239));
+        jdonorAdmin.setFont(new java.awt.Font("NexaBlack", 1, 24)); // NOI18N
+        jdonorAdmin.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        jLabel3.setBackground(new java.awt.Color(216, 235, 239));
+        jLabel3.setFont(new java.awt.Font("NexaBlack", 1, 24)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("WELCOME");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -400,21 +464,31 @@ public class DonorAdmin extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(17, 17, 17)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(177, 177, 177)
+                        .addComponent(jdonorAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(175, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGap(27, 27, 27)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(922, Short.MAX_VALUE)))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24)
+                .addComponent(jdonorAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1)
-                .addGap(12, 12, 12))
+                .addGap(18, 18, 18))
+            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGap(16, 16, 16)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(1013, Short.MAX_VALUE)))
         );
 
         jPanel1.setBackground(new java.awt.Color(134, 197, 197));
@@ -422,7 +496,6 @@ public class DonorAdmin extends javax.swing.JFrame {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/food_donation/donate_food_0.png"))); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Take a bite out of hunger!!!");
 
@@ -468,6 +541,382 @@ public class DonorAdmin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        // TODO add your handlingString code here:
+
+
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        int SelectIndex = jTable1.getSelectedRow();
+
+        jdonarid.setText(model.getValueAt(SelectIndex, 0).toString());
+        jname.setText(model.getValueAt(SelectIndex, 1).toString());
+        jgender.setText(model.getValueAt(SelectIndex, 2).toString());
+        jage.setText(model.getValueAt(SelectIndex, 3).toString());
+        jaddr.setText(model.getValueAt(SelectIndex, 4).toString());
+        jcity.setText(model.getValueAt(SelectIndex, 5).toString());
+        jstate.setText(model.getValueAt(SelectIndex, 6).toString());
+        jcon.setText(model.getValueAt(SelectIndex, 7).toString());
+        jzip.setText(model.getValueAt(SelectIndex, 8).toString());
+        jphone.setText(model.getValueAt(SelectIndex, 9).toString());
+        jmail.setText(model.getValueAt(SelectIndex, 10).toString());
+
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void CreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateActionPerformed
+        // TODO add your handling code here:
+
+        this.setVisible(false);
+        DonorRegistration dr = new DonorRegistration();
+        dr.setVisible(true);
+    }//GEN-LAST:event_CreateActionPerformed
+
+    private void DeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteActionPerformed
+        // TODO add your handling code here:
+        String User_Name = jdonarid.getText();
+        String name = jname.getText();
+        String gender = jgender.getText();
+        int age = Integer.parseInt(jage.getText());
+        String home_address = jaddr.getText();
+        String city = jcity.getText();
+        String state = jstate.getText();
+        String country = jcon.getText();
+        String zipcode = jzip.getText();
+        String phone_number = jphone.getText();
+        String email = jmail.getText();
+
+        try {
+            Statement stmt;
+
+            if (rs.next()) {
+
+                return;
+            }
+            String sql = "Delete from donor_registration WHERE User_Name=?";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, User_Name);
+            pst.execute();
+            donorTable();
+            jdonarid.setText("");
+            jname.setText("");
+            jgender.setText("");
+            jage.setText("");
+            jaddr.setText("");
+            jcity.setText("");
+            jstate.setText("");
+            jcon.setText("");
+            jzip.setText("");
+            jphone.setText("");
+            jmail.setText("");
+
+            JOptionPane.showMessageDialog(this, "Successfully Deleted", "DonorAdmin", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }//GEN-LAST:event_DeleteActionPerformed
+
+    private void UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateActionPerformed
+        // TODO add your handling code here:
+        String donor_id = jdonarid.getText();
+        String name = jname.getText();
+        String gender = jgender.getText();
+        int age = Integer.parseInt(jage.getText());
+        String home_address = jaddr.getText();
+        String city = jcity.getText();
+        String state = jstate.getText();
+        String country = jcon.getText();
+        String zipcode = jzip.getText();
+        String phone_number = jphone.getText();
+        String email = jmail.getText();
+
+        try {
+
+            if (jdonarid.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Username", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jname.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Name", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+
+            if (jage.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Age", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jaddr.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter address", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jcity.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter city", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jstate.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter state", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jcon.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter country", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jzip.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter zipcode", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jphone.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter phone number", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (jmail.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Email", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+
+            Statement stmt;
+            stmt = con.createStatement();
+
+            if (rs.next()) {
+
+                return;
+            }
+            String sql = "Update  donor_registration set Name=?,Gender=?,Age=?,Address=?,City=?,State=?,Country=?,ZipCode=?,Phone_Number=?,Email=? WHERE User_Name=?";
+            pst = con.prepareStatement(sql);
+
+            pst.setString(1, name);
+            pst.setString(2, gender);
+            pst.setInt(3, age);
+            pst.setString(4, home_address);
+            pst.setString(5, city);
+            pst.setString(6, state);
+            pst.setString(7, country);
+            pst.setString(8, zipcode);
+            pst.setString(9, phone_number);
+            pst.setString(10, email);
+            pst.setString(11, donor_id);
+
+            pst.execute();
+            donorTable();
+            jdonarid.setText("");
+            jname.setText("");
+            jgender.setText("");
+            jage.setText("");
+            jaddr.setText("");
+            jcity.setText("");
+            jstate.setText("");
+            jcon.setText("");
+            jzip.setText("");
+            jphone.setText("");
+            jmail.setText("");
+
+            JOptionPane.showMessageDialog(this, "Successfully updated", "DonorAdmin", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+
+        }
+
+    }//GEN-LAST:event_UpdateActionPerformed
+
+    private void SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchActionPerformed
+        // TODO add your handling code here:
+        String s = jSearch.getText();
+        filter(s);
+
+
+    }//GEN-LAST:event_SearchActionPerformed
+
+    private void filter(String s) {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        TableRowSorter<DefaultTableModel> tr = new TableRowSorter<DefaultTableModel>(model);
+        jTable1.setRowSorter(tr);
+        tr.setRowFilter(RowFilter.regexFilter(s));
+    }
+
+    private void jTable1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MousePressed
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        int SelectIndex = jTable1.getSelectedRow();
+
+        jdid.setText(model.getValueAt(SelectIndex, 1).toString());
+    }//GEN-LAST:event_jTable1MousePressed
+
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+        int SelectIndex = jTable2.getSelectedRow();
+
+        jdid.setText(model.getValueAt(SelectIndex, 1).toString());
+
+
+    }//GEN-LAST:event_jTable2MouseClicked
+
+    private void jApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jApproveActionPerformed
+        // TODO add your handling code here:
+        String donorid = jdid.getText();
+        String comments = jTextArea1.getText();
+        String approve = "Approved";
+        try {
+
+            String sql = "Update donation_details set status=?, comments=? where donorid=?";
+
+            pst = con.prepareStatement(sql);
+            pst.setString(1, approve);
+            pst.setString(2, comments);
+            pst.setString(3, donorid);
+
+            pst.execute();
+            JOptionPane.showMessageDialog(this, "Successfully Updated", "Request", JOptionPane.INFORMATION_MESSAGE);
+            jdid.setText("");
+            donorRequestsTable();
+
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+
+
+    }//GEN-LAST:event_jApproveActionPerformed
+
+    private void jDeclineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jDeclineActionPerformed
+        // TODO add your handling code here:
+        String donorid = jdid.getText();
+        String comments = jTextArea1.getText();
+        String decline = "Declined";
+        try {
+
+            String sql = "Update donation_details status=?, comments=? where donorid=?";
+
+            pst = con.prepareStatement(sql);
+            pst.setString(1, decline);
+            pst.setString(2, comments);
+            pst.setString(3, donorid);
+
+            pst.execute();
+            donorRequestsTable();
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }//GEN-LAST:event_jDeclineActionPerformed
+
+    private void populateRequests() {
+        try {
+
+            String qry = "Select * from donation_details";
+            pst = con.prepareStatement(qry);
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+
+                String request_id = String.valueOf(rs.getString("request_id"));
+                String donor_od = String.valueOf(rs.getString("donorid"));
+                String food_name = String.valueOf(rs.getString("food_name"));
+                String weight = String.valueOf(rs.getString("weight"));
+                //String wtype = String.valueOf(rs.getString("wtype"));
+                String food_expirydate = String.valueOf(rs.getString("food_expirydate"));
+                String time = String.valueOf(rs.getString("time"));
+                String date = String.valueOf(rs.getString("date"));
+                String city = String.valueOf(rs.getString("city"));
+                String center_name = String.valueOf(rs.getString("center_name"));
+                String center_address = String.valueOf(rs.getString("center_address"));
+                String status = String.valueOf(rs.getString("status"));
+                String comments = String.valueOf(rs.getString("comments"));
+
+                String tbData[] = {request_id, food_name, weight, food_expirydate, time, date, city, center_name, center_address};
+                DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+                model.addRow(tbData);
+
+            }
+
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }
+
+    private void donorTable() {
+        try {
+            pst = con.prepareCall("Select * from donor_registration");
+            rs = pst.executeQuery();
+            ResultSetMetaData result = (ResultSetMetaData) rs.getMetaData();
+            int c;
+            c = result.getColumnCount();
+
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+
+            while (rs.next()) {
+                Vector vector = new Vector();
+                for (int i = 1; i <= c; i++) {
+                    vector.add(rs.getString("User_Name"));
+                    vector.add(rs.getString("Name"));
+                    vector.add(rs.getString("Gender"));
+                    vector.add(rs.getString("Age"));
+                    vector.add(rs.getString("Address"));
+                    vector.add(rs.getString("City"));
+                    vector.add(rs.getString("State"));
+                    vector.add(rs.getString("Country"));
+                    vector.add(rs.getString("ZipCode"));
+                    vector.add(rs.getString("Phone_Number"));
+                    vector.add(rs.getString("Email"));
+
+                }
+                model.addRow(vector);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DonorAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void donorRequestsTable() {
+        try {
+            pst = con.prepareCall("Select * from donation_details");
+            rs = pst.executeQuery();
+            ResultSetMetaData result = (ResultSetMetaData) rs.getMetaData();
+            int c;
+            c = result.getColumnCount();
+
+            DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+            model.setRowCount(0);
+
+            while (rs.next()) {
+                Vector vector = new Vector();
+                for (int i = 1; i <= c; i++) {
+                    vector.add(rs.getString("request_id"));
+                    vector.add(rs.getString("donorid"));
+                    vector.add(rs.getString("food_name"));
+                    vector.add(rs.getString("weight"));
+                    vector.add(rs.getString("food_expirydate"));
+                    vector.add(rs.getString("time"));
+                    vector.add(rs.getString("date"));
+                    vector.add(rs.getString("city"));
+                    vector.add(rs.getString("center_name"));
+                    vector.add(rs.getString("center_address"));
+                    vector.add(rs.getString("status"));
+                    vector.add(rs.getString("comments"));
+
+                }
+                model.addRow(vector);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DonorAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -512,8 +961,9 @@ public class DonorAdmin extends javax.swing.JFrame {
     private javax.swing.JButton Update;
     private javax.swing.JPanel donatereq;
     private javax.swing.JButton jApprove;
+    private javax.swing.JButton jDecline;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -529,11 +979,12 @@ public class DonorAdmin extends javax.swing.JFrame {
     private javax.swing.JTextField jage;
     private javax.swing.JTextField jcity;
     private javax.swing.JTextField jcon;
+    private javax.swing.JTextField jdid;
     private javax.swing.JTextField jdonarid;
+    private javax.swing.JLabel jdonorAdmin;
     private javax.swing.JTextField jgender;
     private javax.swing.JTextField jmail;
     private javax.swing.JTextField jname;
-    private javax.swing.JTextField jpass;
     private javax.swing.JTextField jphone;
     private javax.swing.JTextField jstate;
     private javax.swing.JTextField jzip;

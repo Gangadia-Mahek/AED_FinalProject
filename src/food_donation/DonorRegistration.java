@@ -4,6 +4,7 @@
  */
 package food_donation;
 
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
 import java.awt.HeadlessException;
 import static java.awt.image.ImageObserver.HEIGHT;
 import java.sql.Connection;
@@ -11,10 +12,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -666,11 +669,18 @@ public class DonorRegistration extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
         }
         else{
+            if( jPass.getText()!=jCPass.getText()){
+                JOptionPane.showMessageDialog(this,"Password are not matching","Error", HEIGHT);
+            }
+        
+            
+            
+          
             
         
         
            
-            if(!Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",jName.getText()))
+            else if(!Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",jName.getText()))
             {
                 JOptionPane.showMessageDialog(this,"Please Enter Valid Name  !!!");
             }
@@ -680,36 +690,36 @@ public class DonorRegistration extends javax.swing.JFrame {
             }
             else if(!Pattern.matches("^[0-9].*$", jZip.getText()))
             {
+                JOptionPane.showMessageDialog(this,"Please Enter Valid Zip !!!");
+            }
+            else if(!Pattern.matches("\\d{10}", jPhone.getText()))
+            {
                 JOptionPane.showMessageDialog(this,"Please Enter Valid Number !!!");
             }
+            
             else if(!Pattern.matches("^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[a-z]{2,4}$",jEmail.getText()))
             {
                 JOptionPane.showMessageDialog(this,"Please Enter Valid Email !!!");
             }
             else {
-                 
-          
-          String username = jUname.getText();
+                 String username = jUname.getText();
           String pass = jPass.getText();
-          String password = jCPass.getText();
+         // String password = jCPass.getText();
           String name = jName.getText();
           int age = Integer.parseInt(jAge.getText());
           String addr = jAddr.getText();
           String city = jCity.getText();
           String state = jState.getText();
           String country = jCountry.getText();
-          int zipcode = Integer.parseInt(jZip.getText());
-          int phone = Integer.parseInt(jPhone.getText());
+          String zipcode = jZip.getText();
+          String phone = jPhone.getText();
           String email = jEmail.getText();
-          String MPass=null;
+          //String MPass=pass;
           
-          if(pass.equals(password))
-            {
-                MPass = pass;
-            }
-            else{
-            JOptionPane.showMessageDialog(this,"Password are not matching","Error", HEIGHT);
-            }
+          
+          
+          
+            
                 
                 try{
                    Statement stmt;
@@ -724,21 +734,23 @@ public class DonorRegistration extends javax.swing.JFrame {
                    }
 
             
-            String sql ="Insert into donor_registration(User_Name,Password,Name,Age,Address,City,State,Country,ZipCode,Phone_Number,Email) value(?,?,?,?,?,?,?,?,?,?,?)";
+            String sql ="Insert into donor_registration(User_Name,Password,Name,Gender, Age,Address,City,State,Country,ZipCode,Phone_Number,Email) value(?,?,?,?,?,?,?,?,?,?,?,?)";
             pst =con.prepareStatement (sql);
             pst.setString(1,username);
-            pst.setString(2,password);
+            pst.setString(2,pass);
             pst.setString(3,name);
-            pst.setInt(4,age);
-            pst.setString(5,addr);
-            pst.setString(6,city);
-            pst.setString(7,state);
-            pst.setString(8,country);
-            pst.setInt(9,zipcode);
-            pst.setInt(10,phone);
-            pst.setString(11,email);
-            
+            pst.setString(4, gender);
+            pst.setInt(5,age);
+            pst.setString(6,addr);
+            pst.setString(7,city);
+            pst.setString(8,state);
+            pst.setString(9,country);
+            pst.setString(10,zipcode);
+            pst.setString(11,phone);
+            pst.setString(12,email);
+
             pst.execute();
+            
             JOptionPane.showMessageDialog(this,"Successfully Registered","Donor",JOptionPane.INFORMATION_MESSAGE);
                 
         }catch(HeadlessException | SQLException ex){
@@ -796,7 +808,6 @@ public class DonorRegistration extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
             public void run() {
                 new DonorRegistration().setVisible(true);
             }

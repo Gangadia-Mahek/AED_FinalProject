@@ -378,6 +378,8 @@ public class Login extends javax.swing.JFrame {
             if (rs.next()){
                 //Next page
                 this.setVisible(false);
+                DonorAdmin ad = new DonorAdmin(username);
+                ad.setVisible(true);
                 
                 
                 
