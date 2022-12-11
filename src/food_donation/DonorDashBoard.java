@@ -47,12 +47,12 @@ public class DonorDashBoard extends javax.swing.JFrame {
     }
     String donorusername;
 
+
     public DonorDashBoard(String username) {
         initComponents();
         con = Connect.ConnectDB();
         this.donorusername = username;
         jusername.setText(donorusername);
-
     }
 
     /**
@@ -78,10 +78,13 @@ public class DonorDashBoard extends javax.swing.JFrame {
         jSpinw = new javax.swing.JSpinner();
         jWtype = new javax.swing.JSpinner();
         javax.swing.JLabel jD = new javax.swing.JLabel();
+        jdate = new com.toedter.calendar.JDateChooser();
         javax.swing.JSeparator jSeparator5 = new javax.swing.JSeparator();
         javax.swing.JLabel jlex = new javax.swing.JLabel();
+        jexdate = new com.toedter.calendar.JDateChooser();
         javax.swing.JLabel jLabel7 = new javax.swing.JLabel();
         javax.swing.JSeparator jSeparator6 = new javax.swing.JSeparator();
+        timePicker1 = new com.raven.swing.TimePicker();
         jstime = new javax.swing.JButton();
         jTime = new javax.swing.JTextField();
         javax.swing.JLabel jLabel8 = new javax.swing.JLabel();
@@ -98,9 +101,6 @@ public class DonorDashBoard extends javax.swing.JFrame {
         javax.swing.JSeparator jSeparator9 = new javax.swing.JSeparator();
         jcenters1 = new javax.swing.JButton();
         jcenters2 = new javax.swing.JButton();
-        timePicker1 = new com.raven.swing.TimePicker();
-        jexdate = new com.toedter.calendar.JDateChooser();
-        jdate = new com.toedter.calendar.JDateChooser();
         requestp = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
@@ -232,10 +232,13 @@ public class DonorDashBoard extends javax.swing.JFrame {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel7.setText("Time:");
+        jLabel7.setText("DonationTime:");
 
         jSeparator6.setBackground(new java.awt.Color(204, 204, 204));
         jSeparator6.setForeground(new java.awt.Color(204, 204, 204));
+
+        timePicker1.setBackground(new java.awt.Color(134, 197, 197));
+        timePicker1.setForeground(new java.awt.Color(0, 0, 0));
 
         jstime.setText("Select Time");
         jstime.addActionListener(new java.awt.event.ActionListener() {
@@ -357,13 +360,13 @@ public class DonorDashBoard extends javax.swing.JFrame {
                             .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(donatepLayout.createSequentialGroup()
                                 .addComponent(jlex, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(32, 32, 32)
-                                .addComponent(jexdate, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jexdate, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(donatepLayout.createSequentialGroup()
                                 .addComponent(jD, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(26, 26, 26)
-                                .addComponent(jdate, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jdate, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, donatepLayout.createSequentialGroup()
                                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -409,14 +412,14 @@ public class DonorDashBoard extends javax.swing.JFrame {
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, donatepLayout.createSequentialGroup()
                                     .addGap(6, 6, 6)
                                     .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 189, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 187, Short.MAX_VALUE)
                 .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(timePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, donatepLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jstime)
-                        .addGap(196, 196, 196))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, donatepLayout.createSequentialGroup()
-                        .addComponent(timePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(124, 124, 124))))
+                        .addGap(93, 93, 93)))
+                .addGap(103, 103, 103))
         );
         donatepLayout.setVerticalGroup(
             donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -449,7 +452,7 @@ public class DonorDashBoard extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jD, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -461,8 +464,8 @@ public class DonorDashBoard extends javax.swing.JFrame {
                         .addGap(34, 34, 34)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(donatepLayout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addComponent(timePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(timePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, 297, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jstime)))
                 .addGap(18, 18, 18)
@@ -724,7 +727,7 @@ public class DonorDashBoard extends javax.swing.JFrame {
                     .addGroup(profilepLayout.createSequentialGroup()
                         .addGap(73, 73, 73)
                         .addComponent(Update)))
-                .addContainerGap(541, Short.MAX_VALUE))
+                .addContainerGap(538, Short.MAX_VALUE))
         );
         profilepLayout.setVerticalGroup(
             profilepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -987,7 +990,7 @@ public class DonorDashBoard extends javax.swing.JFrame {
             jcname.setText("");
             jcaddress.setText("");
             
-            
+            addSubmit();
 
             JOptionPane.showMessageDialog(this, "Request Submitted", "Donation Details", JOptionPane.INFORMATION_MESSAGE);
 
@@ -1016,7 +1019,7 @@ public class DonorDashBoard extends javax.swing.JFrame {
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         int SelectIndex = jTable1.getSelectedRow();
-        //jLabel3.setText(model.getValueAt(SelectIndex, 0).toString());
+       
         jcname.setText(model.getValueAt(SelectIndex, 0).toString());
         jcaddress.setText(model.getValueAt(SelectIndex, 1).toString());
 
@@ -1085,7 +1088,7 @@ public class DonorDashBoard extends javax.swing.JFrame {
                 
                 if (rs.next())
                 {
-                     //pi = new pinfo(rs.getString("username"),rs.getString("password"),rs.getString("name"),rs.getString("gender"),rs.getInt("age"),rs.getString("addr"),rs.getString("city"),rs.getString("state"),rs.getString("country"),rs.getInt("zip"),rs.getInt("phone"),rs.getString("email"));     
+                     
                      String n = rs.getString(2);
                      String g =rs.getString(5);
                      String ag = rs.getString(6);
@@ -1119,6 +1122,24 @@ public class DonorDashBoard extends javax.swing.JFrame {
             } 
                
             }
+    public void addSubmit(){
+        String Submit= "Request Submitted";
+        try{
+            
+        
+        String sql = "Insert into donation_details (status) value (?)";
+
+            pst = con.prepareStatement(sql);
+            pst.setString(1, Submit);
+            
+
+            pst.execute();
+        }catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);            
+            } 
+        
+
+    }
     /**
      * @param args the command line arguments
      */
