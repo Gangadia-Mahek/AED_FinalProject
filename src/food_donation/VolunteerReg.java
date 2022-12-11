@@ -320,6 +320,11 @@ public class VolunteerReg extends javax.swing.JFrame {
         });
 
         jButton3.setText("Back");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jUname.setBackground(new java.awt.Color(134, 197, 197));
         jUname.setText("Enter Username");
@@ -736,6 +741,13 @@ public class VolunteerReg extends javax.swing.JFrame {
         // TODO add your handling code here:
         jAge1.setText("");
     }//GEN-LAST:event_jAge1MousePressed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        Login lg = new Login();
+        lg.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
