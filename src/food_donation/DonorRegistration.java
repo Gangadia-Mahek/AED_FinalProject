@@ -647,7 +647,8 @@ public class DonorRegistration extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        
+          String Pass = jPass.getText();
+        String Cpass = jCPass.getText(); 
         String gender = "";
          if(jMale.isSelected())
             {
@@ -669,17 +670,8 @@ public class DonorRegistration extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
         }
         else{
-            //if( jPass.getText()!=jCPass.getText()){
-                //JOptionPane.showMessageDialog(this,"Password are not matching","Error", HEIGHT);
-            //}
-        
-            
-            
-          
-            
-        
-        
            
+       
             if(!Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",jName.getText()))
             {
                 JOptionPane.showMessageDialog(this,"Please Enter Valid Name  !!!");
@@ -703,8 +695,8 @@ public class DonorRegistration extends javax.swing.JFrame {
             }
             else {
                  String username = jUname.getText();
-          String pass = jPass.getText();
-          String Cpass = jCPass.getText();
+        
+        
           String name = jName.getText();
           int age = Integer.parseInt(jAge.getText());
           String addr = jAddr.getText();
@@ -714,19 +706,19 @@ public class DonorRegistration extends javax.swing.JFrame {
           String zipcode = jZip.getText();
           String phone = jPhone.getText();
           String email = jEmail.getText();
-          String MPass=null;
-                if(pass.equals(Cpass))
-                {
-                    MPass = pass;
+          String Mpass =null;
+            
+        if(Pass.equals(Cpass))
+        {
+           
+            Mpass = Pass;
             //JOptionPane.showMessageDialog(this, "Passwords are Not Matching", "Error", HEIGHT);
-                } 
-                else
-                {
-                    JOptionPane.showMessageDialog(this, "Passwords are Not Matching", "Error", HEIGHT);}
-          
-          
-          
-          
+           
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "Passwords are Not Matching", "Error", HEIGHT);
+        }
             
                 
                 try{
@@ -745,7 +737,7 @@ public class DonorRegistration extends javax.swing.JFrame {
             String sql ="Insert into donor_registration(User_Name,Password,Name,Gender, Age,Address,City,State,Country,ZipCode,Phone_Number,Email) value(?,?,?,?,?,?,?,?,?,?,?,?)";
             pst =con.prepareStatement (sql);
             pst.setString(1,username);
-            pst.setString(2,MPass);
+            pst.setString(2,Mpass);
             pst.setString(3,name);
             pst.setString(4, gender);
             pst.setInt(5,age);

@@ -257,12 +257,12 @@ public class Login extends javax.swing.JFrame {
             jreg.setVisible(true);
             break;
             
-            case "Donar":
+            case "Donor":
             jlogin.setVisible(true);
             jreg.setVisible(true);
             break;
 
-            case "DonarAdmin":
+            case "DonorAdmin":
             jlogin.setVisible(true);
             jreg.setVisible(false);
             break;
@@ -293,6 +293,11 @@ public class Login extends javax.swing.JFrame {
             break;
             
             case "RecipientAdmin":
+            jlogin.setVisible(true);
+            jreg.setVisible(false);
+            break;
+            
+            case "Admin":
             jlogin.setVisible(true);
             jreg.setVisible(false);
             break;
@@ -461,6 +466,29 @@ public class Login extends javax.swing.JFrame {
             // TODO add your handling code here:
         }
         }
+        if (jUserTypecombo.getSelectedItem().equals("DeliveryEmployee")){
+        String sq1= "select * from delemp where empid= ? and pass=?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            rs= pst.executeQuery();
+            if (rs.next()){
+                //Next frame
+                this.setVisible(false);
+                delEmp del = new  delEmp();
+                del.empid(username);
+                del.setVisible(true);
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
         if (jUserTypecombo.getSelectedItem().equals("RecipientAdmin")){
         String sq1= "select * from admin_login where admin_username= ? and admin_password =?";
         try{
@@ -481,7 +509,7 @@ public class Login extends javax.swing.JFrame {
         }
         }
         if (jUserTypecombo.getSelectedItem().equals("Recipient")){
-        String sq1= "select * from recipient_registration where admin_username= ? and admin_password =?";
+        String sq1= "select * from recipient_registration where User_Name= ? and Password =?";
         try{
             pst=con.prepareStatement(sq1);
             pst.setString(1, username);
@@ -491,6 +519,7 @@ public class Login extends javax.swing.JFrame {
                 //Next frame
                 this.setVisible(false);
                 RecpDashboard rp = new RecpDashboard(username);
+                rp.getid(username);
                 rp.setVisible(true);
             }
             
@@ -502,7 +531,32 @@ public class Login extends javax.swing.JFrame {
             // TODO add your handling code here:
         }
         }
-
+        if (jUserTypecombo.getSelectedItem().equals("Admin")){
+        String sq1= "select * from admin_login where admin_username= ? and admin_password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            
+            rs= pst.executeQuery();
+            if (rs.next()){
+                //Next page
+                this.setVisible(false);
+                SysAdmin sd= new SysAdmin();
+                sd.setVisible(true);
+                
+                
+                
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
 
         
         
@@ -512,9 +566,25 @@ public class Login extends javax.swing.JFrame {
 
     private void jregActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jregActionPerformed
         // TODO add your handling code here:
+        
+        if (jUserTypecombo.getSelectedItem().equals("Donor")){
          DonorRegistration dr = new DonorRegistration();
         dr.setVisible(true);
        dispose();
+        }
+        else if(jUserTypecombo.getSelectedItem().equals("Volunteer"))
+        {
+            VolunteerReg vr =new VolunteerReg();
+            vr.setVisible(true);
+            dispose();
+        }
+        if(jUserTypecombo.getSelectedItem().equals("Recipient"))
+        {
+            RecipientReg rg =new RecipientReg();
+            rg.setVisible(true);
+            dispose();
+        }
+        
         
     }//GEN-LAST:event_jregActionPerformed
 

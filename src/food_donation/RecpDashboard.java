@@ -41,7 +41,7 @@ public class RecpDashboard extends javax.swing.JFrame {
         jdate.setMinSelectableDate(date);
         
        
-        //addreq();
+        addreq();
      
     }
     public RecpDashboard(String username) {
@@ -53,6 +53,7 @@ public class RecpDashboard extends javax.swing.JFrame {
         this.recpusername = username;
         jLabel3.setText(recpusername);
         jLabel3.setVisible(false);
+         addreq();
     }
 
     /**
@@ -67,6 +68,7 @@ public class RecpDashboard extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         Reqfood = new javax.swing.JPanel();
@@ -139,25 +141,36 @@ public class RecpDashboard extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("No One Goes Hungry !!!");
 
+        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/food_donation/food.png"))); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addGap(45, 45, 45)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(154, 154, 154)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(154, 154, 154)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel6)
+                        .addGap(18, 18, 18)))
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(304, 304, 304))
         );
 
         jPanel2.setBackground(new java.awt.Color(216, 235, 239));
@@ -299,11 +312,11 @@ public class RecpDashboard extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Request ID", "Recipient ID", "Food Name", "Weight", "Date", "Address", "City", "Status", "Comments"
+                "Request ID", "Recipient Name", "Food Name", "Weight", "Date", "Address", "Status", "Comments"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -325,22 +338,21 @@ public class RecpDashboard extends javax.swing.JFrame {
             rcreqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rcreqLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(rcreqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(rcreqLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1078, Short.MAX_VALUE)
-                        .addGap(16, 16, 16))
-                    .addGroup(rcreqLayout.createSequentialGroup()
-                        .addComponent(getreq)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1078, Short.MAX_VALUE)
+                .addGap(16, 16, 16))
+            .addGroup(rcreqLayout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(getreq)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         rcreqLayout.setVerticalGroup(
             rcreqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rcreqLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(42, 42, 42)
                 .addComponent(getreq)
-                .addContainerGap(313, Short.MAX_VALUE))
+                .addContainerGap(297, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Recent Requests", rcreq);
@@ -715,7 +727,7 @@ public class RecpDashboard extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -727,7 +739,7 @@ public class RecpDashboard extends javax.swing.JFrame {
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(15, 15, 15)
-                        .addComponent(jLabel3)))
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1)
                 .addGap(12, 12, 12))
@@ -802,7 +814,8 @@ public class RecpDashboard extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        
+        String s1=null;
+        String c1 = null;
          String rid=jLabel3.getText();
         String  rnm =jrname.getText();
         String radr=jradr.getText();
@@ -816,15 +829,18 @@ public class RecpDashboard extends javax.swing.JFrame {
         
         try {
                  
-                 String qry ="Insert into delreq (recpid,recpname,adr,org,fdname,weight,date) value(?,?,?,?,?,?,?)";
+                 String qry ="Insert into recipients_details(recipients_id,recipient_name,recipient_address,recipients_food_name,recipient_foodweight,recipient_date,recipients_organization,recipients_status,recipients_comments) value(?,?,?,?,?,?,?,?,?)";
                 pst =con.prepareStatement(qry);
                 pst.setString(1, rid);
                 pst.setString(2, rnm);
                 pst.setString(3, radr);
-                pst.setString(4, rorg);
-                pst.setString(5, fname);
-                pst.setString(6,wt);
-                pst.setString(7, dt);
+                pst.setString(7, rorg);
+                pst.setString(4, fname);
+                pst.setString(5,wt);
+                pst.setString(6, dt);
+                pst.setString(8, s1);
+                pst.setString(9, c1);
+                
              
                 pst.execute();
                 
@@ -848,7 +864,7 @@ public class RecpDashboard extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton1ActionPerformed
     
-    /*public void addreq()
+    public void addreq()
     {
          String rid = jLabel3.getText();
         
@@ -882,16 +898,7 @@ public class RecpDashboard extends javax.swing.JFrame {
         
     }
     
-     public void addprof()
-     {
          
-         String id = jLabel3.getText();
-         
-         
-         
-         
-         
-     } */       
     private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
         // TODO add your handling code here:
         Login lg = new Login();
@@ -906,18 +913,21 @@ public class RecpDashboard extends javax.swing.JFrame {
 
     private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
         // TODO add your handling code here:
+        addinfo();
         
     }//GEN-LAST:event_jTabbedPane1MouseClicked
 
     public void addSubmit(){
         String Submit= "Request Submitted";
+        String id = jLabel3.getText();
         try{
             
         
-        String sql = "Insert into recipients_details (status) value (?)";
+        String sql = "Update recipients_details set recipients_status=? where recipients_id = ? ";
 
             pst = con.prepareStatement(sql);
             pst.setString(1, Submit);
+            pst.setString(2, Submit);
             
 
             pst.execute();
@@ -930,7 +940,8 @@ public class RecpDashboard extends javax.swing.JFrame {
     private void recipientRequestTable() {
         String User_Name = jLabel3.getText();
         try {
-            pst = con.prepareCall("Select * from recipients_details where User_Name ");
+            pst = con.prepareCall("Select * from recipients_details where recipients_id=?");
+             pst.setString(1,User_Name);
             rs = pst.executeQuery();
             ResultSetMetaData result = (ResultSetMetaData) rs.getMetaData();
             int c;
@@ -949,7 +960,7 @@ public class RecpDashboard extends javax.swing.JFrame {
                     vector.add(rs.getString("recipient_foodweight"));
                      vector.add(rs.getString("recipient_date"));
                     vector.add(rs.getString("recipient_address"));
-                    vector.add(rs.getString("recipients_city"));
+                   // vector.add(rs.getString("recipients_city"));
                     vector.add(rs.getString("recipients_status"));
                     vector.add(rs.getString("recipients_comments"));
 
@@ -1011,6 +1022,12 @@ public class RecpDashboard extends javax.swing.JFrame {
             } 
                
             }
+    
+    public void getid(String id)
+    {
+        jLabel3.setText(id);
+        
+    }
     /**
      * @param args the command line arguments
      */
@@ -1064,6 +1081,7 @@ public class RecpDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JTextField jName;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

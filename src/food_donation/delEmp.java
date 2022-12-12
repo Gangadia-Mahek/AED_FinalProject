@@ -30,6 +30,18 @@ public class delEmp extends javax.swing.JFrame {
         setExtendedState(delEmp.MAXIMIZED_BOTH);
         jLabel6.setVisible(false);
     }
+    
+    String vusername;
+
+    public delEmp(String vusername) {
+        initComponents();
+        con = Connect.ConnectDB();
+        //VolunteersSlotsAvailabilityTable();
+        this.vusername = vusername;
+        jLabel6.setText(vusername);
+        jLabel6.setVisible(false);
+         setExtendedState(VolunteerDashboard.MAXIMIZED_BOTH);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -362,7 +374,6 @@ public class delEmp extends javax.swing.JFrame {
         jLabel2.setText("WELCOME");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel6.setText("6");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -377,7 +388,7 @@ public class delEmp extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -560,6 +571,11 @@ public class delEmp extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    public void empid(String id)
+    {
+        jLabel6.setText(id);
+    }
+    
     private void jdeldt1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jdeldt1ActionPerformed
         // TODO add your handling code here:
         Login lg = new Login();
