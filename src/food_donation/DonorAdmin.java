@@ -255,8 +255,11 @@ public class DonorAdmin extends javax.swing.JFrame {
                         .addGap(50, 50, 50)
                         .addGroup(DonodirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Search))
-                        .addGap(266, 266, 266)
+                            .addGroup(DonodirLayout.createSequentialGroup()
+                                .addComponent(Search)
+                                .addGap(31, 31, 31)
+                                .addComponent(jButton1)))
+                        .addGap(244, 244, 244)
                         .addGroup(DonodirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(DonodirLayout.createSequentialGroup()
                                 .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -303,17 +306,12 @@ public class DonorAdmin extends javax.swing.JFrame {
                                     .addGap(0, 0, Short.MAX_VALUE))))))
                 .addGap(214, 214, 214))
             .addGroup(DonodirLayout.createSequentialGroup()
-                .addGroup(DonodirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(DonodirLayout.createSequentialGroup()
-                        .addGap(141, 141, 141)
-                        .addComponent(Create)
-                        .addGap(55, 55, 55)
-                        .addComponent(Delete)
-                        .addGap(53, 53, 53)
-                        .addComponent(Update))
-                    .addGroup(DonodirLayout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addComponent(jButton1)))
+                .addGap(141, 141, 141)
+                .addComponent(Create)
+                .addGap(55, 55, 55)
+                .addComponent(Delete)
+                .addGap(53, 53, 53)
+                .addComponent(Update)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         DonodirLayout.setVerticalGroup(
@@ -338,7 +336,9 @@ public class DonorAdmin extends javax.swing.JFrame {
                             .addComponent(jname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(DonodirLayout.createSequentialGroup()
                         .addGap(23, 23, 23)
-                        .addComponent(Search)))
+                        .addGroup(DonodirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Search)
+                            .addComponent(jButton1))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(DonodirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
@@ -380,9 +380,7 @@ public class DonorAdmin extends javax.swing.JFrame {
                     .addComponent(Update)
                     .addComponent(Create)
                     .addComponent(Delete))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(160, 160, 160))
+                .addContainerGap(280, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Donor Directory", Donodir);
@@ -437,14 +435,17 @@ public class DonorAdmin extends javax.swing.JFrame {
             .addGroup(donatereqLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(donatereqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jdid, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2)
                     .addGroup(donatereqLayout.createSequentialGroup()
-                        .addComponent(jApprove)
-                        .addGap(40, 40, 40)
-                        .addComponent(jDecline))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 980, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(114, Short.MAX_VALUE))
+                        .addGroup(donatereqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jdid, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(donatereqLayout.createSequentialGroup()
+                                .addComponent(jApprove)
+                                .addGap(40, 40, 40)
+                                .addComponent(jDecline))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 771, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         donatereqLayout.setVerticalGroup(
             donatereqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -788,7 +789,7 @@ public class DonorAdmin extends javax.swing.JFrame {
         String approve = "Approved";
         try {
 
-            String sql = "Update donation_details set status=?, comments=? where donorid=?";
+            String sql = "Update donation_details set status=?, comments=? where donorid=? ";
 
             pst = con.prepareStatement(sql);
             pst.setString(1, approve);
@@ -798,7 +799,9 @@ public class DonorAdmin extends javax.swing.JFrame {
             pst.execute();
             JOptionPane.showMessageDialog(this, "Successfully Updated", "Request", JOptionPane.INFORMATION_MESSAGE);
             jdid.setText("");
+            jTextArea1.setText("");
             donorRequestsTable();
+            
 
         } catch (HeadlessException | SQLException ex) {
             JOptionPane.showMessageDialog(this, ex);
@@ -822,6 +825,9 @@ public class DonorAdmin extends javax.swing.JFrame {
             pst.setString(3, donorid);
 
             pst.execute();
+            JOptionPane.showMessageDialog(this, "Successfully Updated", "Request", JOptionPane.INFORMATION_MESSAGE);
+            jdid.setText("");
+            jTextArea1.setText("");
             donorRequestsTable();
         } catch (HeadlessException | SQLException ex) {
             JOptionPane.showMessageDialog(this, ex);

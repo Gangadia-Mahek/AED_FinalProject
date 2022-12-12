@@ -36,7 +36,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         initComponents();
         con = Connect.ConnectDB();
         VolunteersSlotsAvailabilityTable();
-        setExtendedState(VolunteerDashboard.MAXIMIZED_BOTH);
+        //setExtendedState(VolunteerDashboard.MAXIMIZED_BOTH);
     }
     String vusername;
 
@@ -47,6 +47,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         this.vusername = vusername;
         jLabel22.setText(vusername);
         jLabel22.setVisible(false);
+         setExtendedState(VolunteerDashboard.MAXIMIZED_BOTH);
     }
 
     /**
@@ -70,7 +71,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = new javax.swing.JTable();
-        jButton5 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
         Signin = new javax.swing.JPanel();
         javax.swing.JLabel jLabel6 = new javax.swing.JLabel();
         javax.swing.JLabel jLabel7 = new javax.swing.JLabel();
@@ -127,6 +128,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jLabel22 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -204,10 +206,10 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(jTable3);
 
-        jButton5.setText("Change timeslot");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        jButton4.setText("Logout");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                jButton4ActionPerformed(evt);
             }
         });
 
@@ -232,10 +234,9 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(timeslotsLayout.createSequentialGroup()
                         .addGap(101, 101, 101)
-                        .addComponent(jButton1))
-                    .addGroup(timeslotsLayout.createSequentialGroup()
-                        .addGap(80, 80, 80)
-                        .addComponent(jButton5)))
+                        .addGroup(timeslotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton4)
+                            .addComponent(jButton1))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(timeslotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(timeslotsLayout.createSequentialGroup()
@@ -258,9 +259,9 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(37, 37, 37)
                 .addComponent(jButton1)
-                .addGap(26, 26, 26)
-                .addComponent(jButton5)
-                .addContainerGap(273, Short.MAX_VALUE))
+                .addGap(51, 51, 51)
+                .addComponent(jButton4)
+                .addContainerGap(248, Short.MAX_VALUE))
             .addGroup(timeslotsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(timeslotsLayout.createSequentialGroup()
                     .addGap(50, 50, 50)
@@ -343,6 +344,12 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         SigninLayout.setHorizontalGroup(
             SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SigninLayout.createSequentialGroup()
+                .addGap(56, 56, 56)
+                .addGroup(SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(checkout)
+                    .addComponent(jButton2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(SigninLayout.createSequentialGroup()
                 .addGroup(SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(SigninLayout.createSequentialGroup()
                         .addGap(42, 42, 42)
@@ -365,43 +372,40 @@ public class VolunteerDashboard extends javax.swing.JFrame {
                                     .addComponent(jTimein, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(SigninLayout.createSequentialGroup()
                         .addGap(68, 68, 68)
-                        .addComponent(checkin))
-                    .addGroup(SigninLayout.createSequentialGroup()
-                        .addGap(56, 56, 56)
-                        .addGroup(SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(checkout)
-                            .addComponent(jButton2))))
-                .addContainerGap(516, Short.MAX_VALUE))
+                        .addComponent(checkin)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 162, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 528, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(89, 89, 89))
         );
         SigninLayout.setVerticalGroup(
             SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(SigninLayout.createSequentialGroup()
-                .addGap(52, 52, 52)
-                .addGroup(SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jDatein, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTimein, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(checkin)
-                .addGap(52, 52, 52)
-                .addGroup(SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jDateout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(38, 38, 38)
+                .addGroup(SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(SigninLayout.createSequentialGroup()
+                        .addGroup(SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jDatein, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTimein, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(checkin)
+                        .addGap(52, 52, 52)
+                        .addGroup(SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jDateout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(SigninLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTimeout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(checkout)
-                .addGap(49, 49, 49)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
+                .addGap(46, 46, 46)
                 .addComponent(jButton2)
-                .addContainerGap(103, Short.MAX_VALUE))
+                .addContainerGap(370, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Sign In", Signin);
@@ -825,19 +829,30 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("Volunteers for humanity !!!");
 
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/food_donation/vl.png"))); // NOI18N
+        jLabel1.setPreferredSize(new java.awt.Dimension(354, 340));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(58, 58, 58)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(502, 502, 502)
+                .addGap(114, 114, 114)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -959,8 +974,8 @@ public class VolunteerDashboard extends javax.swing.JFrame {
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         // TODO add your handling code here:
-        DefaultTableModel model = (DefaultTableModel) jTable3.getModel();
-        int SelectIndex = jTable3.getSelectedRow();
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        int SelectIndex = jTable1.getSelectedRow();
 
         jTextField1.setText(model.getValueAt(SelectIndex, 0).toString());
         jTextField2.setText(model.getValueAt(SelectIndex, 1).toString());
@@ -968,6 +983,14 @@ public class VolunteerDashboard extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        
+        if (jTextField1.getText().isBlank()||jTextField2.getText().isBlank())
+        {
+            
+            JOptionPane.showMessageDialog(this, "Pls select Time slot", "Time booking Error", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else{
+            
         try {
             String date = jTextField1.getText();
             String time = jTextField2.getText();
@@ -985,8 +1008,10 @@ public class VolunteerDashboard extends javax.swing.JFrame {
             jTextField2.setText("");
 
             JOptionPane.showMessageDialog(this, "Submitted", "Time booking", JOptionPane.INFORMATION_MESSAGE);
+            vRequestsTable();
         } catch (HeadlessException | SQLException ex) {
             JOptionPane.showMessageDialog(this, ex);
+        }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -998,31 +1023,6 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         jTextField1.setText(model.getValueAt(SelectIndex, 0).toString());
         jTextField2.setText(model.getValueAt(SelectIndex, 1).toString());
     }//GEN-LAST:event_jTable3MouseClicked
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
-        try {
-            String date = jTextField1.getText();
-            String time = jTextField2.getText();
-            String vid = jLabel22.getText();
-
-            String sql = "Update volunteer_booked_time set volunteer_booked_day=? volunteer_booked_timing=? where vid=?";
-
-            pst = con.prepareStatement(sql);
-            pst.setString(1, date);
-            pst.setString(2, time);
-            pst.setString(3, vid);
-            pst.execute();
-
-            jTextField1.setText("");
-            jTextField2.setText("");
-
-            JOptionPane.showMessageDialog(this, "Submitted", "Time booking", JOptionPane.INFORMATION_MESSAGE);
-        } catch (HeadlessException | SQLException ex) {
-            JOptionPane.showMessageDialog(this, ex);
-        }
-
-    }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -1049,6 +1049,8 @@ public class VolunteerDashboard extends javax.swing.JFrame {
             jTimeout.setText("");
 
             JOptionPane.showMessageDialog(this, "Submitted", "Time booking", JOptionPane.INFORMATION_MESSAGE);
+            checkin();
+            
         } catch (HeadlessException | SQLException ex) {
             JOptionPane.showMessageDialog(this, ex);
         }
@@ -1065,7 +1067,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
         String name = jName.getText();
         String gender = jGender.getText();
-        int age = Integer.parseInt(jAge.getText());
+        long age = Long.parseLong(jAge.getText());
         String status = jStatus.getText();
         String Org = jOrg.getText();
         String address = jAddr.getText();
@@ -1073,7 +1075,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         String state = jState.getText();
         String country = jCountry.getText();
         String zip = jZip.getText();
-        String phone = jPhone.getText();
+        Long phone =  Long.parseLong(jPhone.getText());
         String email = jEmail.getText();
         String vid = jLabel22.getText();
         try {
@@ -1140,12 +1142,12 @@ public class VolunteerDashboard extends javax.swing.JFrame {
 
                 return;
             }
-            String sql = "Update volunteer_regsitration set Name=?,Gender=?,Age=?,Status=?, Organization=?,Address=?,City=?,State=?,Country=?,ZipCode=?,Phone_Number=?,Email=? WHERE User_Name=?";
+            String sql = "Update volunteer_registration set Name=?,Gender=?,Age=?,Status=?, Organization=?,Address=?,City=?,State=?,Country=?,ZipCode=?,Phone_Number=?,Email=? WHERE User_Name=?";
             pst = con.prepareStatement(sql);
 
             pst.setString(1, name);
             pst.setString(2, gender);
-            pst.setInt(3, age);
+            pst.setLong(3, age);
             pst.setString(4, status);
             pst.setString(5, Org);
             pst.setString(6, address);
@@ -1153,7 +1155,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
             pst.setString(8, state);
             pst.setString(9, country);
             pst.setString(10, zip);
-            pst.setString(11, phone);
+            pst.setLong(11, phone);
             pst.setString(12, email);
             pst.setString(13, vid);
 
@@ -1165,6 +1167,13 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        Login lg = new Login();
+        lg.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     public void addinfo() {
 
@@ -1178,18 +1187,18 @@ public class VolunteerDashboard extends javax.swing.JFrame {
 
             if (rs.next()) {
 
-                String n = rs.getString(3);
-                String g = rs.getString(4);
-                String ag = rs.getString(5);
-                String sta = rs.getString(6);
-                String org = rs.getString(7);
-                String addr = rs.getString(8);
-                String city = rs.getString(9);
-                String st = rs.getString(10);
-                String country = rs.getString(11);
-                String zip = rs.getString(12);
-                String ph = rs.getString(13);
-                String em = rs.getString(14);
+                String n = rs.getString(4);
+                String g = rs.getString(5);
+                String ag = rs.getString(6);
+                String sta = rs.getString(7);
+                String org = rs.getString(8);
+                String addr = rs.getString(9);
+                String city = rs.getString(10);
+                String st = rs.getString(11);
+                String country = rs.getString(12);
+                String zip = rs.getString(13);
+                String ph = rs.getString(14);
+                String em = rs.getString(15);
 
                 jName.setText(n);
                 jGender.setText(g);
@@ -1237,17 +1246,49 @@ public class VolunteerDashboard extends javax.swing.JFrame {
             Logger.getLogger(VolunteerDashboard.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    private void vRequestsTable() {
+    
+    public void checkin()
+    {  String vid = jLabel22.getText();
         try {
-            String vid = jLabel22.getText();
-            pst = con.prepareCall("Select * from volunteer_booked_time where vid=?");
+            pst = con.prepareCall("Select * from shift_sign_in where vid=? ");
+            pst.setString(1, vid);
             rs = pst.executeQuery();
+             
             ResultSetMetaData result = (ResultSetMetaData) rs.getMetaData();
             int c;
             c = result.getColumnCount();
 
             DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+            model.setRowCount(0);
+
+            while (rs.next()) {
+                Vector vector = new Vector();
+                for (int i = 1; i <= c; i++) {
+                    vector.add(rs.getString("shift_sign_in_date"));
+                    vector.add(rs.getString("shift_sign_in_time"));
+                     vector.add(rs.getString("shift_sign_out_time"));
+
+                }
+                model.addRow(vector);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(VolunteerDashboard.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+
+    private void vRequestsTable() {
+        try {
+            String vid = jLabel22.getText();
+            pst = con.prepareCall("Select * from volunteer_booked_time where vid=?");
+            pst.setString(1, vid);
+            rs = pst.executeQuery();
+            ResultSetMetaData result = (ResultSetMetaData) rs.getMetaData();
+            int c;
+            c = result.getColumnCount();
+
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
 
             while (rs.next()) {
@@ -1309,13 +1350,14 @@ public class VolunteerDashboard extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton4;
     private javax.swing.JTextField jCity;
     private javax.swing.JTextField jCountry;
     private javax.swing.JTextField jDatein;
     private javax.swing.JTextField jDateout;
     private javax.swing.JTextField jEmail;
     private javax.swing.JTextField jGender;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel5;

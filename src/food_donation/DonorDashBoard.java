@@ -37,12 +37,12 @@ public class DonorDashBoard extends javax.swing.JFrame {
     public DonorDashBoard() {
         initComponents();
         con = Connect.ConnectDB();
-donorRequestsTable();
-        setExtendedState(DonorDashBoard.MAXIMIZED_BOTH);
-        donatep.setVisible(false);
-        Date date = new Date();
-        jdate.setMinSelectableDate(date);
-        jexdate.setMinSelectableDate(date);
+//donorRequestsTable();
+       // setExtendedState(DonorDashBoard.MAXIMIZED_BOTH);
+       // donatep.setVisible(false);
+        //Date date = new Date();
+       // jdate.setMinSelectableDate(date);
+       // jexdate.setMinSelectableDate(date);
         
         //timePicker1.setVisible(false);
 
@@ -53,10 +53,16 @@ donorRequestsTable();
     public DonorDashBoard(String username) {
         initComponents();
         con = Connect.ConnectDB();
-        donorRequestsTable();
+        //donorRequestsTable();
+        
         this.donorusername = username;
         jusername.setText(donorusername);
         jusername.setVisible(false);
+        setExtendedState(DonorDashBoard.MAXIMIZED_BOTH);
+        donatep.setVisible(false);
+        Date date = new Date();
+        jdate.setMinSelectableDate(date);
+        jexdate.setMinSelectableDate(date);
     }
 
     /**
@@ -356,10 +362,6 @@ donorRequestsTable();
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(jFname, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(donatepLayout.createSequentialGroup()
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTime, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jSeparator5, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(donatepLayout.createSequentialGroup()
@@ -381,42 +383,41 @@ donorRequestsTable();
                                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jSeparator7, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(donatepLayout.createSequentialGroup()
-                        .addGap(12, 12, 12)
+                        .addGap(19, 19, 19)
                         .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(donatepLayout.createSequentialGroup()
-                                .addGap(7, 7, 7)
-                                .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(donatepLayout.createSequentialGroup()
-                                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jUserTypecombo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jcenters)))
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jUserTypecombo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jcenters)))
+                    .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, donatepLayout.createSequentialGroup()
+                            .addGap(18, 18, 18)
+                            .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(donatepLayout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(donatepLayout.createSequentialGroup()
-                                .addGap(4, 4, 4)
-                                .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(donatepLayout.createSequentialGroup()
-                                        .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(donatepLayout.createSequentialGroup()
-                                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jcname, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(donatepLayout.createSequentialGroup()
-                                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(jcaddress, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(5, 5, 5))
-                                    .addGroup(donatepLayout.createSequentialGroup()
-                                        .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jcenters1)
-                                            .addComponent(jcenters2))
-                                        .addGap(253, 253, 253))))
-                            .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, donatepLayout.createSequentialGroup()
-                                    .addGap(6, 6, 6)
-                                    .addComponent(jSeparator9, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 187, Short.MAX_VALUE)
+                                .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jcenters1)
+                                    .addComponent(jcenters2))
+                                .addGap(253, 253, 253))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, donatepLayout.createSequentialGroup()
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jcname, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(donatepLayout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jcaddress, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(donatepLayout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jTime, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 319, Short.MAX_VALUE)
                 .addGroup(donatepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(timePicker1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, donatepLayout.createSequentialGroup()
@@ -528,21 +529,19 @@ donorRequestsTable();
             requestpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(requestpLayout.createSequentialGroup()
                 .addGap(16, 16, 16)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 980, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, requestpLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jRefresh)
-                .addGap(446, 446, 446))
+                .addGroup(requestpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jRefresh)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 980, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(147, Short.MAX_VALUE))
         );
         requestpLayout.setVerticalGroup(
             requestpLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(requestpLayout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(31, 31, 31)
                 .addComponent(jRefresh)
-                .addContainerGap(350, Short.MAX_VALUE))
+                .addContainerGap(337, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Requests", requestp);
@@ -553,7 +552,6 @@ donorRequestsTable();
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Name: ");
 
-        dName.setEditable(false);
         dName.setBackground(new java.awt.Color(216, 235, 239));
         dName.setBorder(null);
 
@@ -736,7 +734,7 @@ donorRequestsTable();
                     .addGroup(profilepLayout.createSequentialGroup()
                         .addGap(73, 73, 73)
                         .addComponent(Update)))
-                .addContainerGap(538, Short.MAX_VALUE))
+                .addContainerGap(670, Short.MAX_VALUE))
         );
         profilepLayout.setVerticalGroup(
             profilepLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -808,8 +806,9 @@ donorRequestsTable();
 
         jTabbedPane1.addTab("Profile", profilep);
 
-        jusername.setBackground(new java.awt.Color(216, 235, 239));
+        jusername.setBackground(new java.awt.Color(51, 51, 51));
         jusername.setFont(new java.awt.Font("NexaBlack", 1, 24)); // NOI18N
+        jusername.setForeground(new java.awt.Color(0, 0, 0));
         jusername.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         jLabel20.setBackground(new java.awt.Color(216, 235, 239));
@@ -828,7 +827,7 @@ donorRequestsTable();
                         .addGap(165, 165, 165)
                         .addComponent(jusername, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel2Layout.createSequentialGroup()
                     .addGap(27, 27, 27)
@@ -1012,6 +1011,9 @@ donorRequestsTable();
 
     private void jcenters2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcenters2ActionPerformed
         // TODO add your handling code here:
+        Login lg = new Login();
+        lg.setVisible(true);
+        dispose();
     }//GEN-LAST:event_jcenters2ActionPerformed
 
     private void jFnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFnameActionPerformed
@@ -1048,6 +1050,8 @@ donorRequestsTable();
 
     private void jRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRefreshActionPerformed
         // TODO add your handling code here:
+        donorRequestsTable();
+        
         
     }//GEN-LAST:event_jRefreshActionPerformed
 
@@ -1148,8 +1152,9 @@ donorRequestsTable();
         }
     }//GEN-LAST:event_UpdateActionPerformed
  private void donorRequestsTable() {
-     
+     System.out.println("running");
      String donorid= jusername.getText();
+     System.out.println("running");
         try {
 
             String qry = "Select * from donation_details where donorid=? ";
@@ -1157,23 +1162,23 @@ donorRequestsTable();
             pst.setString(1, donorid);
             rs=pst.executeQuery();
 
-            if (rs.next()) {
+            while (rs.next()) {
 
-                String request_id = String.valueOf(rs.getString("request_id"));
-                //String donor_od = String.valueOf(rs.getString("donorid"));
-                String food_name = String.valueOf(rs.getString("food_name"));
-                String weight = String.valueOf(rs.getString("weight"));
-                //String wtype = String.valueOf(rs.getString("wtype"));
-                String food_expirydate = String.valueOf(rs.getString("food_expirydate"));
-                String time = String.valueOf(rs.getString("time"));
-                String date = String.valueOf(rs.getString("date"));
-                String city = String.valueOf(rs.getString("city"));
-                String center_name = String.valueOf(rs.getString("center_name"));
-                String center_address = String.valueOf(rs.getString("center_address"));
-                String status = String.valueOf(rs.getString("status"));
-                String comments = String.valueOf(rs.getString("comments"));
+                String request_id = rs.getString("request_id");
+               
+                String food_name = rs.getString("food_name");
+                String weight = rs.getString("weight");
+               
+                String food_expirydate = rs.getString("food_expirydate");
+                String time = rs.getString("time");
+                String date =rs.getString("date");
+                String city = rs.getString("city");
+                String center_name = rs.getString("center_name");
+                String center_address =rs.getString("center_address");
+                String status = rs.getString("status");
+                String comments =rs.getString("comments");
 
-                String tbData[] = {request_id, food_name, weight, food_expirydate, time, date, city, center_name, center_address};
+                String tbData[] = {request_id, food_name, weight, food_expirydate, time, date, city, center_name, center_address,status,comments};
                 DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
                 model.addRow(tbData);
 
@@ -1247,7 +1252,7 @@ donorRequestsTable();
             
 
             pst.execute();
-            donorRequestsTable();
+           // donorRequestsTable();
         }catch (HeadlessException | SQLException ex) {
             JOptionPane.showMessageDialog(this, ex);            
             } 

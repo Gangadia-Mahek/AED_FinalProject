@@ -656,12 +656,13 @@ public class VolunteerReg extends javax.swing.JFrame {
                     "Please Enter All Fields",
                     "Try Again",
                     JOptionPane.ERROR_MESSAGE);
-        }if (jComboBox1.getSelectedItem().equals("Select")) {
-                JOptionPane.showMessageDialog( this, "Please select blood group","Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+        }
+            
         else{
-                if(!Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",jName.getText()))
+                if (jComboBox1.getSelectedItem().equals("Select")) {
+                JOptionPane.showMessageDialog( this, "Please select Status","Error", JOptionPane.ERROR_MESSAGE);
+                }
+             else if(!Pattern.matches("^[A-Za-z\\s]{1,}[\\.]{0,1}[A-Za-z\\s]{0,}$",jName.getText()))
                 {
                     JOptionPane.showMessageDialog(this,"Please Enter Valid Name  !!!");
                 }
@@ -671,8 +672,14 @@ public class VolunteerReg extends javax.swing.JFrame {
                 }
                 else if(!Pattern.matches("^[0-9].*$", jZip.getText()))
                 {
-                    JOptionPane.showMessageDialog(this,"Please Enter Valid Number !!!");
+                    JOptionPane.showMessageDialog(this,"Please Enter Valid Zipcode !!!");
                 }
+                 else if (!Pattern.matches("\\d{10}",jPhone.getText()))
+            {
+                JOptionPane.showMessageDialog(this, "Please Enter Valid Number  !!!");
+                
+            }
+           
                 else if(!Pattern.matches("^[\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[a-z]{2,4}$",jEmail.getText()))
                 {
                     JOptionPane.showMessageDialog(this,"Please Enter Valid Email !!!");
@@ -681,15 +688,15 @@ public class VolunteerReg extends javax.swing.JFrame {
                     String username = jUname.getText();
                     String pass = jPass.getText();
                     String name = jName.getText();
-                    int age = Integer.parseInt(jAge.getText());
+                    long age = Long.parseLong(jAge.getText());
                     String status = jComboBox1.getSelectedItem().toString();
                     String organization = jAge1.getText();
                     String addr = jAddr.getText();
                     String city = jCity.getText();
                     String state = jState.getText();
                     String country = jCountry.getText();
-                    int zipcode = Integer.parseInt(jZip.getText());
-                    int phone = Integer.parseInt(jPhone.getText());
+                    String zipcode = jZip.getText();
+                    long phone = Long.parseLong(jPhone.getText());
                     String email = jEmail.getText();
                     try{
                         Statement stmt;
@@ -708,15 +715,15 @@ public class VolunteerReg extends javax.swing.JFrame {
                         pst.setString(2,pass);
                         pst.setString(3,name);
                         pst.setString(4,gender);
-                        pst.setInt(5,age);
+                        pst.setLong(5,age);
                         pst.setString(6,status);
                         pst.setString(7,organization);
                         pst.setString(8,addr);
                         pst.setString(9,city);
                         pst.setString(10,state);
                         pst.setString(11,country);
-                        pst.setInt(12,zipcode);
-                        pst.setInt(13,phone);
+                        pst.setString(12,zipcode);
+                        pst.setLong(13,phone);
                         pst.setString(14,email);
                         pst.execute();
                         JOptionPane.showMessageDialog(this,"Successfully Registered","Volunteer",JOptionPane.INFORMATION_MESSAGE);
