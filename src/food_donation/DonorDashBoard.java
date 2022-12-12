@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -36,12 +37,13 @@ public class DonorDashBoard extends javax.swing.JFrame {
     public DonorDashBoard() {
         initComponents();
         con = Connect.ConnectDB();
-
+donorRequestsTable();
         setExtendedState(DonorDashBoard.MAXIMIZED_BOTH);
         donatep.setVisible(false);
         Date date = new Date();
         jdate.setMinSelectableDate(date);
         jexdate.setMinSelectableDate(date);
+        
         //timePicker1.setVisible(false);
 
     }
@@ -51,8 +53,10 @@ public class DonorDashBoard extends javax.swing.JFrame {
     public DonorDashBoard(String username) {
         initComponents();
         con = Connect.ConnectDB();
+        donorRequestsTable();
         this.donorusername = username;
         jusername.setText(donorusername);
+        jusername.setVisible(false);
     }
 
     /**
@@ -644,6 +648,11 @@ public class DonorDashBoard extends javax.swing.JFrame {
         jSeparator19.setForeground(new java.awt.Color(204, 204, 204));
 
         Update.setText("Update");
+        Update.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UpdateActionPerformed(evt);
+            }
+        });
 
         dGender.setBackground(new java.awt.Color(216, 235, 239));
         dGender.setBorder(null);
@@ -1027,40 +1036,9 @@ public class DonorDashBoard extends javax.swing.JFrame {
 
     private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
         // TODO add your handling code here:
-        String donorid = jusername.getText();
+                    addinfo();
 
-        try {
-
-            String sql = "Select * from donation_details where donorid=?";
-            pst = con.prepareStatement(sql);
-            pst.setString(1, donorid);
-            rs = pst.executeQuery();
-
-            while (rs.next()) {
-
-                String request_id = String.valueOf(rs.getString("request_id"));
-                String food_name = String.valueOf(rs.getString("food_name"));
-                String weight = String.valueOf(rs.getString("weight"));
-                //String wtype = String.valueOf(rs.getString("wtype"));
-                String food_expirydate = String.valueOf(rs.getString("food_expirydate"));
-                String time = String.valueOf(rs.getString("time"));
-                String date = String.valueOf(rs.getString("date"));
-                String city = String.valueOf(rs.getString("city"));
-                String center_name = String.valueOf(rs.getString("center_name"));
-                String center_address = String.valueOf(rs.getString("center_address"));
-
-                String tbData[] = {request_id, food_name, weight, food_expirydate, time, date, city, center_name, center_address};
-                DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
-                model.addRow(tbData);
-                
-              
-
-            }
-            addinfo();
-
-        } catch (HeadlessException | SQLException ex) {
-            JOptionPane.showMessageDialog(this, ex);
-        }
+        
         
         
         
@@ -1072,6 +1050,139 @@ public class DonorDashBoard extends javax.swing.JFrame {
         // TODO add your handling code here:
         
     }//GEN-LAST:event_jRefreshActionPerformed
+
+    private void UpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateActionPerformed
+        // TODO add your handling code here:
+        
+           String name = dName.getText();
+        String gender = dGender.getText();
+        int age = Integer.parseInt(dAge.getText());
+        String address = dAddr.getText();
+        String city = Dcity.getText();
+        String state = dState.getText();
+        String country = dCountry.getText();
+        String zip = dZip.getText();
+        String phone = dPhone.getText();
+        String email = dEmail.getText();
+        String donorid= jusername.getText();
+
+        try {
+            if (dName.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Name", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (dGender.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Gender", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (dAge.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Age", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (dAddr.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Address", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (Dcity.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter City", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (dState.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter State", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (dCountry.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Country", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (dZip.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Zip", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (dPhone.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Phone", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            if (dEmail.getText().equals("")) {
+                JOptionPane.showMessageDialog(this, "Please enter Email", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+
+            }
+            Statement stmt;
+            stmt = con.createStatement();
+
+            if (rs.next()) {
+
+                return;
+            }
+            String sql = "Update  donor_registration set Name=?,Gender=?,Age=?,Address=?,City=?,State=?,Country=?,ZipCode=?,Phone_Number=?,Email=? WHERE User_Name=?";
+            pst = con.prepareStatement(sql);
+
+            pst.setString(1, name);
+            pst.setString(2, gender);
+            pst.setInt(3, age);
+            pst.setString(4, address);
+            pst.setString(5, city);
+            pst.setString(6, state);
+            pst.setString(7, country);
+            pst.setString(8, zip);
+            pst.setString(9, phone);
+            pst.setString(10, email);
+            pst.setString(11, donorid);
+
+            pst.execute();
+            JOptionPane.showMessageDialog(this, "Successfully updated", "DonorDetails", JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+
+        }
+    }//GEN-LAST:event_UpdateActionPerformed
+ private void donorRequestsTable() {
+     
+     String donorid= jusername.getText();
+        try {
+
+            String qry = "Select * from donation_details where donorid=? ";
+            pst = con.prepareStatement(qry);
+            pst.setString(1, donorid);
+            rs=pst.executeQuery();
+
+            if (rs.next()) {
+
+                String request_id = String.valueOf(rs.getString("request_id"));
+                //String donor_od = String.valueOf(rs.getString("donorid"));
+                String food_name = String.valueOf(rs.getString("food_name"));
+                String weight = String.valueOf(rs.getString("weight"));
+                //String wtype = String.valueOf(rs.getString("wtype"));
+                String food_expirydate = String.valueOf(rs.getString("food_expirydate"));
+                String time = String.valueOf(rs.getString("time"));
+                String date = String.valueOf(rs.getString("date"));
+                String city = String.valueOf(rs.getString("city"));
+                String center_name = String.valueOf(rs.getString("center_name"));
+                String center_address = String.valueOf(rs.getString("center_address"));
+                String status = String.valueOf(rs.getString("status"));
+                String comments = String.valueOf(rs.getString("comments"));
+
+                String tbData[] = {request_id, food_name, weight, food_expirydate, time, date, city, center_name, center_address};
+                DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+                model.addRow(tbData);
+
+            }
+
+        } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);
+        }
+    }
 
     public void addinfo()
        {         
@@ -1102,8 +1213,8 @@ public class DonorDashBoard extends javax.swing.JFrame {
                                           
                      
                      dName.setText(n);
-                     dGender.setText(ag);
-                     dAge.setText(g);
+                     dGender.setText(g);
+                     dAge.setText(ag);
                      dAddr.setText(ha);
                      Dcity.setText(ct);
                      dState.setText(st);
@@ -1123,17 +1234,20 @@ public class DonorDashBoard extends javax.swing.JFrame {
                
             }
     public void addSubmit(){
+        String donorid = jusername.getText();
         String Submit= "Request Submitted";
         try{
             
         
-        String sql = "Insert into donation_details (status) value (?)";
+        String sql = "Update  donation_details set status=? where donorid=?";
 
             pst = con.prepareStatement(sql);
             pst.setString(1, Submit);
+             pst.setString(2, donorid);
             
 
             pst.execute();
+            donorRequestsTable();
         }catch (HeadlessException | SQLException ex) {
             JOptionPane.showMessageDialog(this, ex);            
             } 

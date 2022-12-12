@@ -480,6 +480,28 @@ public class Login extends javax.swing.JFrame {
             // TODO add your handling code here:
         }
         }
+        if (jUserTypecombo.getSelectedItem().equals("Recipient")){
+        String sq1= "select * from recipient_registration where admin_username= ? and admin_password =?";
+        try{
+            pst=con.prepareStatement(sq1);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            rs= pst.executeQuery();
+            if (rs.next()){
+                //Next frame
+                this.setVisible(false);
+                RecpDashboard rp = new RecpDashboard(username);
+                rp.setVisible(true);
+            }
+            
+            else{
+                JOptionPane.showMessageDialog(null, "Enter valid username or password");
+            }
+        }catch(SQLException | HeadlessException e){
+            JOptionPane.showMessageDialog(null, e);
+            // TODO add your handling code here:
+        }
+        }
 
 
         

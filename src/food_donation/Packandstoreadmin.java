@@ -49,6 +49,7 @@ public class Packandstoreadmin extends javax.swing.JFrame {
         setExtendedState(Packandstoreadmin.MAXIMIZED_BOTH);
         this.packadmin = username;
         jPackagingAdmin.setText(packadmin);
+        jPackagingAdmin.setVisible(false);
 
     }
 
