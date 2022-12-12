@@ -4,12 +4,15 @@
  */
 package food_donation;
 
+import com.mysql.cj.jdbc.result.ResultSetMetaData;
+import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -27,14 +30,29 @@ public class RecpDashboard extends javax.swing.JFrame {
     Connection con=null;
         ResultSet rs=null;
         PreparedStatement pst=null;
-    public RecpDashboard() {
+        String recpusername;
+    public RecpDashboard(){
+        
+    
         initComponents();
+        con = Connect.ConnectDB();
         setExtendedState(RecpDashboard.MAXIMIZED_BOTH);
         Date date =new Date();
         jdate.setMinSelectableDate(date);
-        jLabel3.setVisible(false);
-        addreq();
+        
+       
+        //addreq();
      
+    }
+    public RecpDashboard(String username) {
+        initComponents();
+        con = Connect.ConnectDB();
+        setExtendedState(RecpDashboard.MAXIMIZED_BOTH);
+        Date date =new Date();
+        jdate.setMinSelectableDate(date);
+        this.recpusername = username;
+        jLabel3.setText(recpusername);
+        jLabel3.setVisible(false);
     }
 
     /**
@@ -104,7 +122,7 @@ public class RecpDashboard extends javax.swing.JFrame {
         javax.swing.JLabel jLabel19 = new javax.swing.JLabel();
         javax.swing.JSeparator jSeparator7 = new javax.swing.JSeparator();
         javax.swing.JSeparator jSeparator13 = new javax.swing.JSeparator();
-        jName1 = new javax.swing.JTextField();
+        jGender = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -116,10 +134,8 @@ public class RecpDashboard extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(457, 494));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\shubh\\OneDrive\\Documents\\food.png")); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setText("No One Goes Hungry !!!");
 
@@ -132,7 +148,7 @@ public class RecpDashboard extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,30 +163,29 @@ public class RecpDashboard extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(216, 235, 239));
 
         jTabbedPane1.setBackground(new java.awt.Color(216, 235, 239));
-        jTabbedPane1.setForeground(new java.awt.Color(0, 0, 0));
         jTabbedPane1.setToolTipText("");
         jTabbedPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane1MouseClicked(evt);
+            }
+        });
 
         Reqfood.setBackground(new java.awt.Color(216, 235, 239));
-        Reqfood.setForeground(new java.awt.Color(0, 0, 0));
 
         jLabel23.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel23.setForeground(new java.awt.Color(0, 0, 0));
         jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel23.setText("Food Name:");
 
         jLabel22.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel22.setForeground(new java.awt.Color(0, 0, 0));
         jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel22.setText("Organization:");
 
         jLabel24.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel24.setForeground(new java.awt.Color(0, 0, 0));
         jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel24.setText("Weight:");
 
         jLabel25.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel25.setForeground(new java.awt.Color(0, 0, 0));
         jLabel25.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel25.setText("Delivery Date:");
 
@@ -178,8 +193,6 @@ public class RecpDashboard extends javax.swing.JFrame {
 
         jSpinw.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
-        jButton1.setForeground(new java.awt.Color(0, 0, 0));
         jButton1.setText("Submit");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -188,17 +201,13 @@ public class RecpDashboard extends javax.swing.JFrame {
         });
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Recipient Name:");
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("Address:");
 
-        Logout.setBackground(new java.awt.Color(255, 255, 255));
-        Logout.setForeground(new java.awt.Color(0, 0, 0));
         Logout.setText("Logout");
         Logout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -290,11 +299,11 @@ public class RecpDashboard extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Request ID", "Recipient ID", "Food Name", "Weight", "Date", "Address", "City", "Status"
+                "Request ID", "Recipient ID", "Food Name", "Weight", "Date", "Address", "City", "Status", "Comments"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -303,8 +312,6 @@ public class RecpDashboard extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jTable2);
 
-        getreq.setBackground(new java.awt.Color(255, 255, 255));
-        getreq.setForeground(new java.awt.Color(0, 0, 0));
         getreq.setText("Get Details");
         getreq.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -386,7 +393,6 @@ public class RecpDashboard extends javax.swing.JFrame {
         jSeparator11.setForeground(new java.awt.Color(204, 204, 204));
 
         jCountry.setBackground(new java.awt.Color(216, 235, 239));
-        jCountry.setForeground(new java.awt.Color(0, 0, 0));
         jCountry.setBorder(null);
         jCountry.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -395,7 +401,6 @@ public class RecpDashboard extends javax.swing.JFrame {
         });
 
         jCity.setBackground(new java.awt.Color(216, 235, 239));
-        jCity.setForeground(new java.awt.Color(0, 0, 0));
         jCity.setBorder(null);
         jCity.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -404,7 +409,6 @@ public class RecpDashboard extends javax.swing.JFrame {
         });
 
         jName.setBackground(new java.awt.Color(216, 235, 239));
-        jName.setForeground(new java.awt.Color(0, 0, 0));
         jName.setBorder(null);
         jName.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -413,7 +417,6 @@ public class RecpDashboard extends javax.swing.JFrame {
         });
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(0, 0, 0));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel11.setText("Gender:");
 
@@ -421,7 +424,6 @@ public class RecpDashboard extends javax.swing.JFrame {
         jSeparator4.setForeground(new java.awt.Color(204, 204, 204));
 
         jEmail.setBackground(new java.awt.Color(216, 235, 239));
-        jEmail.setForeground(new java.awt.Color(0, 0, 0));
         jEmail.setBorder(null);
         jEmail.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -430,17 +432,14 @@ public class RecpDashboard extends javax.swing.JFrame {
         });
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel10.setText("State:");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(0, 0, 0));
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel12.setText("City:");
 
         jZip.setBackground(new java.awt.Color(216, 235, 239));
-        jZip.setForeground(new java.awt.Color(0, 0, 0));
         jZip.setBorder(null);
         jZip.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -449,7 +448,6 @@ public class RecpDashboard extends javax.swing.JFrame {
         });
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(0, 0, 0));
         jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel14.setText("Age:");
 
@@ -457,7 +455,6 @@ public class RecpDashboard extends javax.swing.JFrame {
         jSeparator5.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel13.setText("Phone Number:");
 
@@ -468,12 +465,10 @@ public class RecpDashboard extends javax.swing.JFrame {
         jSeparator6.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel15.setForeground(new java.awt.Color(0, 0, 0));
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel15.setText("Email:");
 
         jAddr.setBackground(new java.awt.Color(216, 235, 239));
-        jAddr.setForeground(new java.awt.Color(0, 0, 0));
         jAddr.setBorder(null);
         jAddr.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -482,12 +477,10 @@ public class RecpDashboard extends javax.swing.JFrame {
         });
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(0, 0, 0));
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel16.setText("Home Address:");
 
         jPhone.setBackground(new java.awt.Color(216, 235, 239));
-        jPhone.setForeground(new java.awt.Color(0, 0, 0));
         jPhone.setBorder(null);
         jPhone.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -496,7 +489,6 @@ public class RecpDashboard extends javax.swing.JFrame {
         });
 
         jState.setBackground(new java.awt.Color(216, 235, 239));
-        jState.setForeground(new java.awt.Color(0, 0, 0));
         jState.setBorder(null);
         jState.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -505,12 +497,10 @@ public class RecpDashboard extends javax.swing.JFrame {
         });
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(0, 0, 0));
         jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel17.setText("Zipcode:");
 
         jAge.setBackground(new java.awt.Color(216, 235, 239));
-        jAge.setForeground(new java.awt.Color(0, 0, 0));
         jAge.setBorder(null);
         jAge.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -525,12 +515,10 @@ public class RecpDashboard extends javax.swing.JFrame {
         jSeparator8.setForeground(new java.awt.Color(204, 204, 204));
 
         jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel18.setForeground(new java.awt.Color(0, 0, 0));
         jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel18.setText("Name:");
 
         jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel19.setForeground(new java.awt.Color(0, 0, 0));
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel19.setText("Country:");
 
@@ -540,21 +528,16 @@ public class RecpDashboard extends javax.swing.JFrame {
         jSeparator13.setBackground(new java.awt.Color(204, 204, 204));
         jSeparator13.setForeground(new java.awt.Color(204, 204, 204));
 
-        jName1.setBackground(new java.awt.Color(216, 235, 239));
-        jName1.setForeground(new java.awt.Color(0, 0, 0));
-        jName1.setBorder(null);
-        jName1.addMouseListener(new java.awt.event.MouseAdapter() {
+        jGender.setBackground(new java.awt.Color(216, 235, 239));
+        jGender.setBorder(null);
+        jGender.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                jName1MousePressed(evt);
+                jGenderMousePressed(evt);
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(255, 255, 255));
-        jButton3.setForeground(new java.awt.Color(0, 0, 0));
         jButton3.setText("Update");
 
-        jButton4.setBackground(new java.awt.Color(255, 255, 255));
-        jButton4.setForeground(new java.awt.Color(0, 0, 0));
         jButton4.setText("Refresh");
 
         javax.swing.GroupLayout rprofileLayout = new javax.swing.GroupLayout(rprofile);
@@ -593,7 +576,7 @@ public class RecpDashboard extends javax.swing.JFrame {
                                 .addGap(29, 29, 29)
                                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jName1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jGender, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, rprofileLayout.createSequentialGroup()
                                 .addGap(32, 32, 32)
                                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -654,7 +637,7 @@ public class RecpDashboard extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(rprofileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(jName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator8, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -718,11 +701,8 @@ public class RecpDashboard extends javax.swing.JFrame {
 
         jLabel2.setBackground(new java.awt.Color(216, 235, 239));
         jLabel2.setFont(new java.awt.Font("NexaBlack", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("WELCOME");
-
-        jLabel3.setText("112");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -735,7 +715,7 @@ public class RecpDashboard extends javax.swing.JFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel3)))
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -816,9 +796,9 @@ public class RecpDashboard extends javax.swing.JFrame {
         jAge.setText("");
     }//GEN-LAST:event_jAgeMousePressed
 
-    private void jName1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jName1MousePressed
+    private void jGenderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jGenderMousePressed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jName1MousePressed
+    }//GEN-LAST:event_jGenderMousePressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
@@ -835,7 +815,7 @@ public class RecpDashboard extends javax.swing.JFrame {
         String dt =sdf.format(jdate.getDate());
         
         try {
-                 con = Connect.ConnectDB();
+                 
                  String qry ="Insert into delreq (recpid,recpname,adr,org,fdname,weight,date) value(?,?,?,?,?,?,?)";
                 pst =con.prepareStatement(qry);
                 pst.setString(1, rid);
@@ -858,7 +838,7 @@ public class RecpDashboard extends javax.swing.JFrame {
         jradr.setText("");
         jorg.setText("");
         jfname.setText("");
-      
+                addSubmit();
                      
                 } catch (SQLException ex) {
                     Logger.getLogger(LogisticAdmin.class.getName()).log(Level.SEVERE, null, ex);
@@ -868,7 +848,7 @@ public class RecpDashboard extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton1ActionPerformed
     
-    public void addreq()
+    /*public void addreq()
     {
          String rid = jLabel3.getText();
         
@@ -911,7 +891,7 @@ public class RecpDashboard extends javax.swing.JFrame {
          
          
          
-     }        
+     } */       
     private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
         // TODO add your handling code here:
         Login lg = new Login();
@@ -921,9 +901,116 @@ public class RecpDashboard extends javax.swing.JFrame {
 
     private void getreqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getreqActionPerformed
         // TODO add your handling code here:
+        recipientRequestTable();
     }//GEN-LAST:event_getreqActionPerformed
 
-    
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
+
+    public void addSubmit(){
+        String Submit= "Request Submitted";
+        try{
+            
+        
+        String sql = "Insert into recipients_details (status) value (?)";
+
+            pst = con.prepareStatement(sql);
+            pst.setString(1, Submit);
+            
+
+            pst.execute();
+        }catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);            
+            } 
+        
+
+    }
+    private void recipientRequestTable() {
+        String User_Name = jLabel3.getText();
+        try {
+            pst = con.prepareCall("Select * from recipients_details where User_Name ");
+            rs = pst.executeQuery();
+            ResultSetMetaData result = (ResultSetMetaData) rs.getMetaData();
+            int c;
+            c = result.getColumnCount();
+
+            DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+            model.setRowCount(0);
+
+            while (rs.next()) {
+                Vector vector = new Vector();
+                for (int i = 1; i <= c; i++) {
+                    vector.add(rs.getString("recipient_request_id"));
+                    //vector.add(rs.getString("recipients_id"));
+                    vector.add(rs.getString("recipient_name"));
+                    vector.add(rs.getString("recipients_food_name"));
+                    vector.add(rs.getString("recipient_foodweight"));
+                     vector.add(rs.getString("recipient_date"));
+                    vector.add(rs.getString("recipient_address"));
+                    vector.add(rs.getString("recipients_city"));
+                    vector.add(rs.getString("recipients_status"));
+                    vector.add(rs.getString("recipients_comments"));
+
+
+                }
+                model.addRow(vector);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DonorAdmin.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void addinfo()
+       {         
+           
+               String donorid = jLabel3.getText();
+                 try {
+                
+                String qry ="Select * from recipient_registration where User_Name= ? ";
+                pst =con.prepareStatement(qry);
+                 pst.setString(1,donorid);
+                rs = pst.executeQuery();
+                
+               
+                
+                if (rs.next())
+                {
+                     
+                     String n = rs.getString(3);
+                     String g =rs.getString(4);
+                     String ag = rs.getString(5);
+                     String ha=rs.getString(6);
+                     String ct = rs.getString(7);
+                     String st =rs.getString(8);
+                     String cn =rs.getString(9);
+                     String z =rs.getString(10);
+                     String ph =rs.getString(11);
+                     String em =rs.getString(12);
+                                          
+                     
+                     jName.setText(n);
+                     jGender.setText(ag);
+                     jAge.setText(g);
+                     jAddr.setText(ha);
+                     jCity.setText(ct);
+                     jState.setText(st);
+                     jCountry.setText(cn);
+                     jZip.setText(z);
+                     jPhone.setText(ph);
+                     jEmail.setText(em);
+                            
+                }
+                
+              
+                   
+                
+            } catch (HeadlessException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex);            
+            } 
+               
+            }
     /**
      * @param args the command line arguments
      */
@@ -972,12 +1059,12 @@ public class RecpDashboard extends javax.swing.JFrame {
     private javax.swing.JTextField jCity;
     private javax.swing.JTextField jCountry;
     private javax.swing.JTextField jEmail;
+    private javax.swing.JTextField jGender;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField jName;
-    private javax.swing.JTextField jName1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jPhone;

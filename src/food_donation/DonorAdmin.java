@@ -50,6 +50,7 @@ public class DonorAdmin extends javax.swing.JFrame {
         setExtendedState(DonorAdmin.MAXIMIZED_BOTH);
         this.adminusername = username;
         jdonorAdmin.setText(adminusername);
+        jdonorAdmin.setVisible(false);
     }
 
     /**
@@ -93,6 +94,7 @@ public class DonorAdmin extends javax.swing.JFrame {
         Create = new javax.swing.JButton();
         Delete = new javax.swing.JButton();
         Search = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         donatereq = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
@@ -223,6 +225,13 @@ public class DonorAdmin extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setText("LogOut");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout DonodirLayout = new javax.swing.GroupLayout(Donodir);
         Donodir.setLayout(DonodirLayout);
         DonodirLayout.setHorizontalGroup(
@@ -294,12 +303,17 @@ public class DonorAdmin extends javax.swing.JFrame {
                                     .addGap(0, 0, Short.MAX_VALUE))))))
                 .addGap(214, 214, 214))
             .addGroup(DonodirLayout.createSequentialGroup()
-                .addGap(141, 141, 141)
-                .addComponent(Create)
-                .addGap(55, 55, 55)
-                .addComponent(Delete)
-                .addGap(53, 53, 53)
-                .addComponent(Update)
+                .addGroup(DonodirLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(DonodirLayout.createSequentialGroup()
+                        .addGap(141, 141, 141)
+                        .addComponent(Create)
+                        .addGap(55, 55, 55)
+                        .addComponent(Delete)
+                        .addGap(53, 53, 53)
+                        .addComponent(Update))
+                    .addGroup(DonodirLayout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(jButton1)))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         DonodirLayout.setVerticalGroup(
@@ -366,7 +380,9 @@ public class DonorAdmin extends javax.swing.JFrame {
                     .addComponent(Update)
                     .addComponent(Create)
                     .addComponent(Delete))
-                .addContainerGap(280, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(160, 160, 160))
         );
 
         jTabbedPane1.addTab("Donor Directory", Donodir);
@@ -812,6 +828,13 @@ public class DonorAdmin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jDeclineActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        this.setVisible(false);
+        Login lg = new Login();
+        lg.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private void populateRequests() {
         try {
 
@@ -961,6 +984,7 @@ public class DonorAdmin extends javax.swing.JFrame {
     private javax.swing.JButton Update;
     private javax.swing.JPanel donatereq;
     private javax.swing.JButton jApprove;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jDecline;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;

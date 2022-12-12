@@ -46,6 +46,7 @@ public class VolunteerDashboard extends javax.swing.JFrame {
         VolunteersSlotsAvailabilityTable();
         this.vusername = vusername;
         jLabel22.setText(vusername);
+        jLabel22.setVisible(false);
     }
 
     /**
